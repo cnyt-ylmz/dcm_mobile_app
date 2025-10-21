@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import '../../../personnel/domain/usecases/load_personnels.dart';
 import '../../../personnel/data/repositories/personnel_repository_impl.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/widgets/result_dialog.dart';
 
 
 class FabricStartDialog extends StatefulWidget {
@@ -166,23 +167,36 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
       print("Response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop(true); // true döndür = başarılı
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(successMessage),
-            backgroundColor: successColor,
-          ),
+        Navigator.of(context).pop(); // Dialog'ı kapat
+        
+        // API response'unda status kontrolü
+        final bool isSuccess = response.data['status'] == true;
+        
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: isSuccess ? [_loomsController.text.trim()] : [],
+          failedItems: isSuccess ? [] : [_loomsController.text.trim()],
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Kumaş İşlemi Sonucu',
+          errorMessage: isSuccess ? null : response.data['message'],
         );
       }
     } catch (e) {
       print("Hata: $e");
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('$errorMessage: $e'),
-            backgroundColor: Colors.red,
-          ),
+        Navigator.of(context).pop(); // Dialog'ı kapat
+        
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: [],
+          failedItems: [_loomsController.text.trim()],
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Kumaş İşlemi Sonucu',
+          errorMessage: e.toString(),
         );
       }
     } finally {

@@ -10,6 +10,7 @@ import '../../../personnel/data/repositories/personnel_repository_impl.dart';
 import '../../../operation/data/repositories/operation_repository_impl.dart';
 import '../../../operation/domain/entities/operation.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/widgets/result_dialog.dart';
 import '../bloc/tezgah_bloc.dart';
 
 
@@ -312,29 +313,34 @@ class _OperationStartFormState extends State<_OperationStartForm> {
       }
 
       if (mounted) {
-        // Ana ekrana dön ve başarılı olduğunu bildir
+        // Ana ekrana dön
         Navigator.of(context).pop(true); // true = başarılı
 
-        // Başarı mesajı göster
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Operasyon başlatıldı!\nTezgahlar: ${tezgahIds.join(", ")}',
-            ),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: tezgahIds,
+          failedItems: [],
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Operasyon Başlatma Sonucu',
         );
       }
     } catch (e) {
       print("Hata: $e");
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Operasyon başlatılamadı: $e'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 4),
-          ),
+        // Ana ekrana dön
+        Navigator.of(context).pop(false); // false = başarısız
+        
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: [],
+          failedItems: tezgahIds,
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Operasyon Başlatma Sonucu',
+          errorMessage: e.toString(),
         );
       }
     } finally {

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import '../../../personnel/domain/usecases/load_personnels.dart';
 import '../../../personnel/data/repositories/personnel_repository_impl.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/widgets/result_dialog.dart';
 
 
 Future<void> showPieceCutDialog(BuildContext context,
@@ -177,22 +178,36 @@ class _PieceCutDialogState extends State<PieceCutDialog> {
       print("Top kesim response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Top kesimi başarıyla tamamlandı'),
-            backgroundColor: Colors.green,
-          ),
+        Navigator.of(context).pop(); // Dialog'ı kapat
+        
+        // API response'unda status kontrolü
+        final bool isSuccess = response.data['status'] == true;
+        
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: isSuccess ? [_tezgahController.text.trim()] : [],
+          failedItems: isSuccess ? [] : [_tezgahController.text.trim()],
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Top Kesimi Sonucu',
+          errorMessage: isSuccess ? null : response.data['message'],
         );
       }
     } catch (e) {
       print("Hata: $e");
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Top kesimi başarısız: $e'),
-            backgroundColor: Colors.red,
-          ),
+        Navigator.of(context).pop(); // Dialog'ı kapat
+        
+        // Result dialog göster
+        await ResultDialog.show(
+          context: context,
+          successItems: [],
+          failedItems: [_tezgahController.text.trim()],
+          successTitle: 'Başarılı',
+          failedTitle: 'Başarısız',
+          dialogTitle: 'Top Kesimi Sonucu',
+          errorMessage: e.toString(),
         );
       }
     } finally {

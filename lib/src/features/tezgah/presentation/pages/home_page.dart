@@ -13,6 +13,7 @@ import '../widgets/fabric_dialog.dart';
 import '../widgets/warp_dialog.dart';
 import '../widgets/piece_cut_dialog.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/widgets/result_dialog.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -579,15 +580,14 @@ Future<void> _handleEndOperation(BuildContext context) async {
     if (!context.mounted) return;
     Navigator.of(context).pop();
 
-    // Başarı mesajı
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Operasyon sonlandırıldı!\nTezgahlar: ${selectedItems.map((e) => e.id).join(", ")}',
-        ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 3),
-      ),
+    // Result dialog göster
+    await ResultDialog.show(
+      context: context,
+      successItems: selectedItems.map((e) => e.id).toList(),
+      failedItems: [],
+      successTitle: 'Başarılı',
+      failedTitle: 'Başarısız',
+      dialogTitle: 'Operasyon Sonlandırma Sonucu',
     );
 
     // Otomatik yenileme
@@ -601,13 +601,15 @@ Future<void> _handleEndOperation(BuildContext context) async {
     if (!context.mounted) return;
     Navigator.of(context).pop();
 
-    // Hata mesajı
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Operasyon sonlandırılamadı: $e'),
-        backgroundColor: Colors.red,
-        duration: const Duration(seconds: 4),
-      ),
+    // Result dialog göster
+    await ResultDialog.show(
+      context: context,
+      successItems: [],
+      failedItems: selectedItems.map((e) => e.id).toList(),
+      successTitle: 'Başarılı',
+      failedTitle: 'Başarısız',
+      dialogTitle: 'Operasyon Sonlandırma Sonucu',
+      errorMessage: e.toString(),
     );
   }
 }
