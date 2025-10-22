@@ -124,6 +124,37 @@ class _WarpFinishDialogState extends State<WarpFinishDialog> {
   Future<void> _submitWarpFinish() async {
     if (!_isValidForm() || _isSubmitting) return;
 
+    // Personel no validasyonu
+    final personnelId = int.tryParse(_personnelIdController.text.trim());
+    if (personnelId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lütfen personel seçiniz!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Personel no'nun listede olup olmadığını kontrol et
+    bool personnelExists = false;
+    for (final entry in _personIndex) {
+      if (entry.key == personnelId) {
+        personnelExists = true;
+        break;
+      }
+    }
+    
+    if (!personnelExists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lütfen geçerli bir personel seçiniz!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isSubmitting = true);
 
     try {
