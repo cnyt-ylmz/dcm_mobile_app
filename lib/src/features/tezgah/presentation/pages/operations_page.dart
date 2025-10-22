@@ -87,15 +87,24 @@ class _OperationStartFormState extends State<_OperationStartForm> {
     final int? id = int.tryParse(_personnelIdController.text.trim());
     if (id == null) {
       _personnelNameController.text = '';
-      return;
-    }
-    for (final entry in _personIndex) {
-      if (entry.key == id) {
-        _personnelNameController.text = entry.value;
-        return;
+    } else {
+      for (final entry in _personIndex) {
+        if (entry.key == id) {
+          _personnelNameController.text = entry.value;
+          break;
+        }
+      }
+      if (_personnelNameController.text.isEmpty) {
+        _personnelNameController.text = '';
       }
     }
-    _personnelNameController.text = '';
+    
+    // Form validasyonunu güncelle
+    if (mounted) {
+      setState(() {
+        // Form validasyonunu güncelle
+      });
+    }
   }
 
   void _onOpCodeChanged() {
@@ -112,6 +121,36 @@ class _OperationStartFormState extends State<_OperationStartForm> {
         _selectedOperation = match;
       });
     }
+    
+    // Form validasyonunu güncelle
+    if (mounted) {
+      setState(() {
+        // Form validasyonunu güncelle
+      });
+    }
+  }
+
+  bool _isValidForm() {
+    if (_personnelIdController.text.trim().isEmpty || 
+        _loomsController.text.trim().isEmpty ||
+        _selectedOperation == null) {
+      return false;
+    }
+    
+    // Personel no'nun geçerli olup olmadığını kontrol et
+    final personnelId = int.tryParse(_personnelIdController.text.trim());
+    if (personnelId == null) {
+      return false;
+    }
+    
+    // Personel no'nun listede olup olmadığını kontrol et
+    for (final entry in _personIndex) {
+      if (entry.key == personnelId) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   @override
@@ -214,7 +253,7 @@ class _OperationStartFormState extends State<_OperationStartForm> {
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text('action_back'.tr())),
               ElevatedButton(
-                onPressed: _isSubmitting ? null : _handleSubmit,
+                onPressed: (_isValidForm() && !_isSubmitting) ? _handleSubmit : null,
                 child: _isSubmitting
                     ? const SizedBox(
                         width: 20,
