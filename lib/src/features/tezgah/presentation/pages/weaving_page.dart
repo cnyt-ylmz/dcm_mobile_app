@@ -70,15 +70,45 @@ class _WeaverFormState extends State<_WeaverForm> {
     final int? id = int.tryParse(raw);
     if (id == null) {
       _personnelNameController.text = '';
-      return;
-    }
-    for (final entry in _personnelIndex) {
-      if (entry.key == id) {
-        _personnelNameController.text = entry.value;
-        return;
+    } else {
+      for (final entry in _personnelIndex) {
+        if (entry.key == id) {
+          _personnelNameController.text = entry.value;
+          break;
+        }
+      }
+      if (_personnelNameController.text.isEmpty) {
+        _personnelNameController.text = '';
       }
     }
-    _personnelNameController.text = '';
+    
+    // Form validasyonunu güncelle
+    if (mounted) {
+      setState(() {
+        // Form validasyonunu güncelle
+      });
+    }
+  }
+
+  bool _isValidForm() {
+    if (_personnelIdController.text.trim().isEmpty || _tezgahController.text.trim().isEmpty) {
+      return false;
+    }
+    
+    // Personel no'nun geçerli olup olmadığını kontrol et
+    final personnelId = int.tryParse(_personnelIdController.text.trim());
+    if (personnelId == null) {
+      return false;
+    }
+    
+    // Personel no'nun listede olup olmadığını kontrol et
+    for (final entry in _personnelIndex) {
+      if (entry.key == personnelId) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   Future<void> _changeWeavers() async {
@@ -293,7 +323,7 @@ class _WeaverFormState extends State<_WeaverForm> {
                       _isProcessing ? null : () => Navigator.of(context).pop(),
                   child: Text('action_back'.tr())),
               ElevatedButton(
-                onPressed: _isProcessing ? null : _changeWeavers,
+                onPressed: (_isValidForm() && !_isProcessing) ? _changeWeavers : null,
                 child: _isProcessing
                     ? const SizedBox(
                         width: 20,
