@@ -258,15 +258,20 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
     final int? id = int.tryParse(_personnelIdController.text.trim());
     if (id == null) {
       _personnelNameController.text = '';
-      return;
-    }
-    for (final entry in _personIndex) {
-      if (entry.key == id) {
-        _personnelNameController.text = entry.value;
-        return;
+    } else {
+      for (final entry in _personIndex) {
+        if (entry.key == id) {
+          _personnelNameController.text = entry.value;
+          break;
+        }
+      }
+      if (_personnelNameController.text.isEmpty) {
+        _personnelNameController.text = '';
       }
     }
-    _personnelNameController.text = '';
+    
+    // Form validasyonunu güncelle
+    _onFormChanged();
   }
 
   @override
