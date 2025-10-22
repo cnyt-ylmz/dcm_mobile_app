@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../domain/usecases/get_tezgahlar.dart';
 import '../../domain/entities/tezgah.dart';
@@ -21,8 +22,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GetTezgahlar usecase = GetTezgahlar(GetIt.I<TezgahRepository>());
+    final Box<dynamic> settingsBox = GetIt.I<Box<dynamic>>();
     return BlocProvider(
-      create: (_) => TezgahBloc(getTezgahlar: usecase)..add(TezgahFetched()),
+      create: (_) => TezgahBloc(
+        getTezgahlar: usecase,
+        settingsBox: settingsBox,
+      )..add(TezgahFetched()),
       child: const _HomeView(),
     );
   }

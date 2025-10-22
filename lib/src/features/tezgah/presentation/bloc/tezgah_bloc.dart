@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../domain/entities/tezgah.dart';
 import '../../domain/usecases/get_tezgahlar.dart';
@@ -9,9 +10,11 @@ part 'tezgah_state.dart';
 
 class TezgahBloc extends Bloc<TezgahEvent, TezgahState> {
   final GetTezgahlar getTezgahlar;
+  final Box<dynamic> _settingsBox;
 
-  TezgahBloc({required this.getTezgahlar})
-      : super(const TezgahState.initial()) {
+  TezgahBloc({required this.getTezgahlar, required Box<dynamic> settingsBox})
+      : _settingsBox = settingsBox,
+        super(const TezgahState.initial()) {
     on<TezgahFetched>(_onFetched);
     on<TezgahGroupChanged>(_onGroupChanged);
     on<TezgahToggleSelection>(_onToggle);
@@ -22,8 +25,11 @@ class TezgahBloc extends Bloc<TezgahEvent, TezgahState> {
       TezgahFetched event, Emitter<TezgahState> emit) async {
     emit(state.copyWith(status: TezgahStatus.loading));
     try {
+      // Kaydedilmiş grup seçimini yükle
+      final String? savedGroup = _settingsBox.get('selected_group') as String?;
+      
       final List<Tezgah> items =
-          await getTezgahlar.call(group: state.selectedGroup);
+          await getTezgahlar.call(group: savedGroup);
       final Set<String> uniqueGroups = items
           .map((e) => (e.groupName).trim())
           .where((g) => g.isNotEmpty)
@@ -31,9 +37,10 @@ class TezgahBloc extends Bloc<TezgahEvent, TezgahState> {
       final List<String> groupList = uniqueGroups.toList()..sort(_compareGroupNames);
       emit(state.copyWith(
         status: TezgahStatus.success,
-        items: _applyFilter(items, state.selectedGroup),
+        items: _applyFilter(items, savedGroup),
         allItems: items,
         groups: groupList,
+        selectedGroup: savedGroup,
       ));
     } catch (e) {
       emit(state.copyWith(status: TezgahStatus.failure));
@@ -44,6 +51,14 @@ class TezgahBloc extends Bloc<TezgahEvent, TezgahState> {
       TezgahGroupChanged event, Emitter<TezgahState> emit) async {
     final String? group = event.group;
     final List<Tezgah> filtered = _applyFilter(state.allItems, group);
+    
+    // Grup seçimini kalıcı olarak kaydet
+    if (group != null) {
+      await _settingsBox.put('selected_group', group);
+    } else {
+      await _settingsBox.delete('selected_group');
+    }
+    
     emit(state.copyWith(selectedGroup: group, items: filtered));
   }
 
