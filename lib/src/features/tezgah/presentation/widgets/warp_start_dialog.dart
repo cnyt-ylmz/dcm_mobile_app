@@ -123,8 +123,24 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
   }
 
   bool _isValidForm() {
-    return _personnelIdController.text.trim().isNotEmpty &&
-        _loomsController.text.trim().isNotEmpty;
+    if (_personnelIdController.text.trim().isEmpty || _loomsController.text.trim().isEmpty) {
+      return false;
+    }
+    
+    // Personel no'nun geçerli olup olmadığını kontrol et
+    final personnelId = int.tryParse(_personnelIdController.text.trim());
+    if (personnelId == null) {
+      return false;
+    }
+    
+    // Personel no'nun listede olup olmadığını kontrol et
+    for (final entry in _personIndex) {
+      if (entry.key == personnelId) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   Future<void> _submitWarpStart() async {

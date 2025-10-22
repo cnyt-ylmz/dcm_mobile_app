@@ -143,10 +143,27 @@ class _PieceCutDialogState extends State<PieceCutDialog> {
   }
 
   bool _isValidForm() {
-    return _personnelIdController.text.trim().isNotEmpty &&
-        _tezgahController.text.trim().isNotEmpty &&
-        _topNoController.text.trim().isNotEmpty &&
-        _metreController.text.trim().isNotEmpty;
+    if (_personnelIdController.text.trim().isEmpty || 
+        _tezgahController.text.trim().isEmpty ||
+        _topNoController.text.trim().isEmpty ||
+        _metreController.text.trim().isEmpty) {
+      return false;
+    }
+    
+    // Personel no'nun geçerli olup olmadığını kontrol et
+    final personnelId = int.tryParse(_personnelIdController.text.trim());
+    if (personnelId == null) {
+      return false;
+    }
+    
+    // Personel no'nun listede olup olmadığını kontrol et
+    for (final entry in _personIndex) {
+      if (entry.key == personnelId) {
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   Future<void> _submitPieceCut() async {
