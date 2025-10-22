@@ -93,9 +93,22 @@ class _SettingsView extends StatelessWidget {
               children: [
                 Expanded(
                   child: RadioListTile<String>(
-                    title: Text('language_turkish'.tr()),
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('🇹🇷'),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            'Türkçe',
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
                     value: 'tr',
                     groupValue: state.settings.languageCode,
+                    contentPadding: EdgeInsets.zero,
                     onChanged: (value) {
                       if (value != null) {
                         context
@@ -110,9 +123,13 @@ class _SettingsView extends StatelessWidget {
                 ),
                 Expanded(
                   child: RadioListTile<String>(
-                    title: Text('language_english'.tr()),
+                    title: Text(
+                      'English',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     value: 'en',
                     groupValue: state.settings.languageCode,
+                    contentPadding: EdgeInsets.zero,
                     onChanged: (value) {
                       if (value != null) {
                         context
@@ -194,7 +211,7 @@ class _SettingsView extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 12),
-            _buildInfoRow('settings_app_name'.tr(), 'FAZ-2 Tezgah Kontrol'),
+            _buildInfoRow('settings_app_name'.tr(), 'DCM Mobile'),
             _buildInfoRow('settings_version'.tr(), '1.0.0'),
             _buildInfoRow('settings_api_url'.tr(), state.settings.apiBaseUrl),
             _buildInfoRow('settings_language_code'.tr(),

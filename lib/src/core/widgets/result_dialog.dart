@@ -56,12 +56,14 @@ class _ResultDialogState extends State<ResultDialog> {
   @override
   void initState() {
     super.initState();
-    // Belirtilen süre sonra otomatik kapat
-    Future.delayed(Duration(seconds: widget.autoCloseSeconds), () {
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    });
+    // Sadece başarılı işlemler için otomatik kapat
+    if (widget.failedItems.isEmpty) {
+      Future.delayed(Duration(seconds: widget.autoCloseSeconds), () {
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      });
+    }
   }
 
   @override
@@ -76,23 +78,29 @@ class _ResultDialogState extends State<ResultDialog> {
           if (widget.successItems.isNotEmpty) ...[
             Text(
               '✅ ${widget.successTitle} (${widget.successItems.length}):',
-              style: const TextStyle(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.green, 
                 fontWeight: FontWeight.bold
               ),
             ),
-            Text(widget.successItems.join(', ')),
+            Text(
+              widget.successItems.join(', '),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 8),
           ],
           if (widget.failedItems.isNotEmpty) ...[
             Text(
               '❌ ${widget.failedTitle} (${widget.failedItems.length}):',
-              style: const TextStyle(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Colors.red, 
                 fontWeight: FontWeight.bold
               ),
             ),
-            Text(widget.failedItems.join(', ')),
+            Text(
+              widget.failedItems.join(', '),
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             if (widget.errorMessage != null) ...[
               const SizedBox(height: 8),
               Container(
@@ -109,9 +117,8 @@ class _ResultDialogState extends State<ResultDialog> {
                     Expanded(
                       child: Text(
                         widget.errorMessage!,
-                        style: TextStyle(
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.red.shade700,
-                          fontSize: 12,
                         ),
                       ),
                     ),
@@ -122,7 +129,18 @@ class _ResultDialogState extends State<ResultDialog> {
           ],
         ],
       ),
-      // Tamam butonu yok - otomatik kapanacak
+      // Başarısız işlemler için Tamam butonu ekle
+      actions: widget.failedItems.isNotEmpty ? [
+        ElevatedButton(
+          onPressed: () => Navigator.of(context).pop(),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text('action_ok'.tr()),
+        ),
+      ] : null,
     );
   }
 }

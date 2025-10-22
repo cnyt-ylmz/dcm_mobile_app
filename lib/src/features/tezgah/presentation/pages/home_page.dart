@@ -160,7 +160,7 @@ class _TezgahGrid extends StatelessWidget {
             final double totalSpacing = spacing * (crossAxisCount - 1);
             final double tileWidth = (maxWidth - totalSpacing) / crossAxisCount;
             final double tileHeight =
-                isLandscape ? 100 : 140; // başlık + 2 satır
+                isLandscape ? 90 : 120; // başlık + 2 satır (daha kompakt)
             final double childAspectRatio = tileWidth / tileHeight;
 
             return GridView.builder(
@@ -189,38 +189,57 @@ class _TezgahGrid extends StatelessWidget {
                       ),
                     ),
                     padding: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    child: Stack(
                       children: [
-                        _TileText(
-                          text: item.loomNo,
-                          style: Theme.of(context).textTheme.titleMedium!,
-                          eventId: item.eventId,
-                        ),
-                        const SizedBox(height: 2),
-                        _TileText(
-                          text: item.weaverName,
-                          style: Theme.of(context).textTheme.bodySmall!,
-                          eventId: item.eventId,
-                          maxLines: 1,
-                        ),
-                        _TileText(
-                          text: item.styleName,
-                          style: Theme.of(context).textTheme.bodySmall!,
-                          eventId: item.eventId,
-                          maxLines: 1,
-                        ),
-                        const SizedBox(height: 2),
-                        if (item.operationName.isNotEmpty) ...[
-                          const SizedBox(height: 2),
-                          _TileText(
-                            text: item.operationName,
-                            style: Theme.of(context).textTheme.bodySmall!,
-                            eventId: item.eventId,
-                            maxLines: 1,
+                        // Sol üst köşede Loom No
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Text(
+                            item.loomNo,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade700,
+                            ),
                           ),
-                        ],
+                        ),
+                        // Dokumacı Adı - Loom No'nun altında ve sola dayalı
+                        Positioned(
+                          top: 25,
+                          left: 0,
+                          child: Text(
+                            item.weaverName,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        // Stil Adı - Dokumacı Adı'nın altında ve sola dayalı
+                        Positioned(
+                          top: 50,
+                          left: 0,
+                          child: Text(
+                            item.styleName,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        // Operasyon adı - Kendi satırında, sola dayalı (varsa)
+                        if (item.operationName.isNotEmpty)
+                          Positioned(
+                            top: 80, // Stil Adı'nın altında (10px boşluk)
+                            left: 0, // Sola dayalı
+                            child: Text(
+                              item.operationName,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -236,14 +255,16 @@ class _TezgahGrid extends StatelessWidget {
 
 Color _eventBackgroundColor(int eventId) {
   switch (eventId) {
+    case 0:
+      return const Color(0xFFE8F5E8); // Pastel yeşil - Çalışıyor
     case 1:
-      return Colors.grey.shade200;
+      return const Color(0xFFF5F5F5); // Pastel gri - Diğer Duruş
     case 2:
-      return Colors.red.shade400;
+      return const Color(0xFFE3F2FD); // Pastel mavi - Atkı Duruşu
     case 3:
-      return const Color(0xFF24456E);
+      return const Color(0xFFFFF3E0); // Pastel turuncu - Çözgü Duruşu
     default:
-      return Colors.grey.shade100;
+      return Colors.grey.shade100; // Varsayılan
   }
 }
 
@@ -262,14 +283,14 @@ class _TileText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool useLightText = eventId == 2 || eventId == 3;
+    // Pastel renklerde koyu metin kullan
     return Text(
       text,
       maxLines: maxLines,
       overflow: TextOverflow.ellipsis,
       textAlign: TextAlign.center,
       style: style.copyWith(
-        color: useLightText ? Colors.white : Colors.black87,
+        color: Colors.black87, // Tüm pastel renklerde koyu metin
         fontWeight: style.fontSize != null && style.fontSize! >= 18
             ? FontWeight.w600
             : null,
@@ -298,6 +319,10 @@ class _BottomActions extends StatelessWidget {
     final List<Widget> buttons = [
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasSelection ? Colors.white : null,
+          elevation: hasSelection ? 8 : 2,
+          shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -318,12 +343,18 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_weaver'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasSelection ? Colors.white : null,
+          elevation: hasSelection ? 8 : 2,
+          shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -343,12 +374,18 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_op_start'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasSelection ? Colors.white : null,
+          elevation: hasSelection ? 8 : 2,
+          shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -410,12 +447,18 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_op_end'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          elevation: hasExactlyOneSelection ? 8 : 2,
+          shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -432,12 +475,18 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_fabric'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasExactlyOneSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          elevation: hasExactlyOneSelection ? 8 : 2,
+          shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -454,12 +503,18 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_warp'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasExactlyOneSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
+          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          elevation: hasExactlyOneSelection ? 8 : 2,
+          shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
@@ -476,7 +531,9 @@ class _BottomActions extends StatelessWidget {
           child: Text(
             'btn_piece_cut'.tr(),
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 14),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: hasExactlyOneSelection ? Colors.white : null,
+            ),
           ),
         ),
       ),

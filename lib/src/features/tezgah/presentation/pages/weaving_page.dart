@@ -235,27 +235,46 @@ class _WeaverFormState extends State<_WeaverForm> {
             if (successLooms.isNotEmpty) ...[
               Text(
                   '✅ ${'weaver_change_successful'.tr()} (${successLooms.length}):',
-                  style: const TextStyle(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.green, fontWeight: FontWeight.bold)),
-              Text(successLooms.join(', ')),
+              Text(
+                successLooms.join(', '),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: 8),
             ],
             if (failedLooms.isNotEmpty) ...[
               Text('❌ ${'weaver_change_failed'.tr()} (${failedLooms.length}):',
-                  style: const TextStyle(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Colors.red, fontWeight: FontWeight.bold)),
-              Text(failedLooms.join(', ')),
+              Text(
+                failedLooms.join(', '),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
             ],
           ],
         ),
-        // Tamam butonunu kaldırdık
+        // Başarısız işlemler için Tamam butonu ekle
+        actions: failedLooms.isNotEmpty ? [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: Text('action_ok'.tr()),
+          ),
+        ] : null,
       ),
     );
     
-    // 2 saniye sonra otomatik kapat
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      Navigator.of(context).pop();
+    // Sadece başarılı işlemler için otomatik kapat
+    if (failedLooms.isEmpty) {
+      await Future.delayed(const Duration(seconds: 2));
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
     }
   }
 
