@@ -8,6 +8,7 @@ import '../../../personnel/domain/usecases/load_personnels.dart';
 import '../../../personnel/data/repositories/personnel_repository_impl.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/widgets/result_dialog.dart';
+import '../../../../core/widgets/qr_scanner_widget.dart';
 
 
 class WarpStartDialog extends StatefulWidget {
@@ -96,12 +97,9 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
         print("Response data boş veya workOrderNo yok");
       }
     } catch (e) {
-      print("API Hatası: $e");
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Çözgü iş emri alınamadı: $e')),
-        );
-      }
+      print("API Hatası: $e - Çözgü iş emri alınamadı, kullanıcı manuel girebilir");
+      // Hata mesajı gösterme, sadece log'la
+      // Kullanıcı manuel olarak iş emri numarası girebilir
     } finally {
       if (mounted) {
         setState(() => _isLoadingWorkOrder = false);
@@ -123,7 +121,9 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
   }
 
   bool _isValidForm() {
-    if (_personnelIdController.text.trim().isEmpty || _loomsController.text.trim().isEmpty) {
+    if (_personnelIdController.text.trim().isEmpty || 
+        _loomsController.text.trim().isEmpty ||
+        _orderNoController.text.trim().isEmpty) {
       return false;
     }
     
@@ -274,6 +274,24 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
     _onFormChanged();
   }
 
+  void _openQRScanner() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => QRScannerWidget(
+          title: 'qr_scan_warp_order_title'.tr(),
+          onCodeScanned: (code) {
+            if (code.isNotEmpty) {
+              setState(() {
+                _orderNoController.text = code;
+              });
+            }
+            // Boş string ise hiçbir şey yapma, manuel giriş için
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _personnelIdController.removeListener(_onIdChanged);
@@ -360,27 +378,70 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         ),
                       )
-                    : null,
+                    : IconButton(
+                        icon: const Icon(Icons.qr_code_scanner),
+                        onPressed: _openQRScanner,
+                        tooltip: 'QR Kod Tara',
+                      ),
               ),
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('action_back'.tr())),
-                ElevatedButton(
-                  onPressed: (_isValidForm() && !_isSubmitting)
-                      ? _submitWarpStart
-                      : null,
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text('action_ok'.tr()),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white 
+                          : Colors.black,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Text('action_cancel_submit'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: (_isValidForm() && !_isSubmitting)
+                        ? _submitWarpStart
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: (_isValidForm() && !_isSubmitting) 
+                            ? const Color(0xFF1565C0)  // Aktif durumda mavi çerçeve
+                            : Colors.grey,              // Pasif durumda gri çerçeve
+                        width: (_isValidForm() && !_isSubmitting) ? 2 : 1,  // Aktif durumda 2px, pasif durumda 1px
+                      ),
+                      backgroundColor: (_isValidForm() && !_isSubmitting) 
+                          ? const Color(0xFF1565C0) 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF2D2D30) 
+                              : Colors.white),
+                      foregroundColor: (_isValidForm() && !_isSubmitting) 
+                          ? Colors.white 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF5A5A5A) 
+                              : Colors.black87),
+                    ),
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('action_submit'.tr()),
+                  ),
                 ),
               ],
             ),

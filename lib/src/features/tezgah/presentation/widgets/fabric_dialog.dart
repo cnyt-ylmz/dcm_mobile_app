@@ -110,10 +110,9 @@ class _WideActionButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
             color: Colors.white,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),

@@ -76,7 +76,20 @@ class _SettingsView extends StatelessWidget {
   }
 
   Widget _buildLanguageSection(BuildContext context, SettingsState state) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark 
+            ? const Color(0xFF2D2D30) 
+            : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -152,7 +165,20 @@ class _SettingsView extends StatelessWidget {
 
   Widget _buildConnectionSettingsSection(
       BuildContext context, SettingsState state) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark 
+            ? const Color(0xFF2D2D30) 
+            : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -160,7 +186,7 @@ class _SettingsView extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.security, color: Theme.of(context).primaryColor),
+                Icon(Icons.security, color: Theme.of(context).textTheme.titleMedium?.color),
                 const SizedBox(width: 8),
                 Text(
                   'settings_connection'.tr(),
@@ -198,7 +224,20 @@ class _SettingsView extends StatelessWidget {
   }
 
   Widget _buildInfoSection(BuildContext context, SettingsState state) {
-    return Card(
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark 
+            ? const Color(0xFF2D2D30) 
+            : Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

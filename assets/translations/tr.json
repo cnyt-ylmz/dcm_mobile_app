@@ -86,5 +86,10 @@
     "validation_personnel_name_required": "Personel Adı gerekli",
     "validation_top_no_required": "Top No gerekli",
     "validation_metre_required": "Metre gerekli",
-    "action_submit": "GÖNDER"
+    "action_submit": "GÖNDER",
+    "action_cancel_submit": "İPTAL",
+    "qr_scan_order_title": "Kumaş İş Emri No Tara",
+    "qr_scan_warp_order_title": "Çözgü İş Emri No Tara",
+    "qr_scan_instruction": "QR kodu kameranın önüne tutun",
+    "qr_manual_entry": "Manuel Giriş"
 }

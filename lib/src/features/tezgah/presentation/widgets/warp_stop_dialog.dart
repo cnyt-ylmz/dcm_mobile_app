@@ -359,22 +359,61 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
             ),
             const SizedBox(height: 16),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OutlinedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('action_back'.tr())),
-                ElevatedButton(
-                  onPressed: (_isValidForm() && !_isSubmitting)
-                      ? _submitWarpStop
-                      : null,
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : Text('action_ok'.tr()),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white 
+                          : Colors.black,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Text('action_cancel_submit'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: (_isValidForm() && !_isSubmitting)
+                        ? _submitWarpStop
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: (_isValidForm() && !_isSubmitting) 
+                            ? const Color(0xFF1565C0)  // Aktif durumda mavi çerçeve
+                            : Colors.grey,              // Pasif durumda gri çerçeve
+                        width: (_isValidForm() && !_isSubmitting) ? 2 : 1,  // Aktif durumda 2px, pasif durumda 1px
+                      ),
+                      backgroundColor: (_isValidForm() && !_isSubmitting) 
+                          ? const Color(0xFF1565C0) 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF2D2D30) 
+                              : Colors.white),
+                      foregroundColor: (_isValidForm() && !_isSubmitting) 
+                          ? Colors.white 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF5A5A5A) 
+                              : Colors.black87),
+                    ),
+                    child: _isSubmitting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('action_submit'.tr()),
+                  ),
                 ),
               ],
             ),

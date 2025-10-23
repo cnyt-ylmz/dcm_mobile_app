@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:dio/dio.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../domain/usecases/get_tezgahlar.dart';
 import '../../domain/entities/tezgah.dart';
@@ -39,14 +40,31 @@ class _HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'DCM Mobile',
-          style: TextStyle(
-            color: const Color(0xFF1565C0),
-            fontWeight: FontWeight.bold,
-          ),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'teksdata',
+              style: GoogleFonts.orbitron(
+                color: const Color(0xFF4285F4), // Mavi renk
+                fontWeight: FontWeight.w600,
+                fontSize: 24,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              'DCM Mobile',
+              style: TextStyle(
+                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -343,8 +361,8 @@ class _BottomActions extends StatelessWidget {
     final List<Widget> buttons = [
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -368,15 +386,15 @@ class _BottomActions extends StatelessWidget {
             'btn_weaver'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -399,15 +417,15 @@ class _BottomActions extends StatelessWidget {
             'btn_op_start'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -472,15 +490,15 @@ class _BottomActions extends StatelessWidget {
             'btn_op_end'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -500,15 +518,15 @@ class _BottomActions extends StatelessWidget {
             'btn_fabric'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -528,15 +546,15 @@ class _BottomActions extends StatelessWidget {
             'btn_warp'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),
       ),
       ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: Colors.white,
+          backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF2D2D30) : null),
+          foregroundColor: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -560,7 +578,7 @@ class _BottomActions extends StatelessWidget {
             'btn_piece_cut'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.white,
+              color: hasExactlyOneSelection ? Colors.white : (Theme.of(context).brightness == Brightness.dark ? const Color(0xFF5A5A5A) : Colors.white),
             ),
           ),
         ),

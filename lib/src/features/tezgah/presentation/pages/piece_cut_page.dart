@@ -23,8 +23,8 @@ class PieceCutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('btn_piece_cut'.tr()),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        surfaceTintColor: Theme.of(context).appBarTheme.surfaceTintColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
       body: _PieceCutForm(selectedLoomNo: selectedLoomNo),
@@ -59,12 +59,16 @@ class _PieceCutFormState extends State<_PieceCutForm> {
   void initState() {
     super.initState();
     _loomNoController.text = widget.selectedLoomNo;
-    _loadPersonnels();
-    _loadWorkOrderData();
     
     // Personel No alanına otomatik odaklan
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _personnelIdFocus.requestFocus();
+      
+      // API çağrılarını ekran açıldıktan sonra başlat
+      Future.microtask(() {
+        _loadPersonnels();
+        _loadWorkOrderData();
+      });
     });
   }
 
@@ -81,42 +85,77 @@ class _PieceCutFormState extends State<_PieceCutForm> {
 
   Future<void> _loadPersonnels() async {
     try {
+      // Önce UI'yi göstermek için setState çağır
+      if (mounted) {
+        setState(() {});
+      }
+      
       final apiClient = GetIt.I<ApiClient>();
       final personnelRemoteDataSource = PersonnelRemoteDataSourceImpl(apiClient: apiClient);
       final personnelRepository = PersonnelRepositoryImpl(remote: personnelRemoteDataSource);
       final loadPersonnels = LoadPersonnels(personnelRepository);
       
       final personnels = await loadPersonnels();
-      setState(() => _personnels = personnels);
+      if (mounted) {
+        setState(() => _personnels = personnels);
+      }
     } catch (e) {
       print('Personnel yükleme hatası: $e');
     }
   }
 
   Future<void> _loadWorkOrderData() async {
+    if (!mounted) return;
+    
+    print('🔄 _loadWorkOrderData başlatıldı - Loom No: ${widget.selectedLoomNo}');
     setState(() => _isLoadingWorkOrder = true);
+    
     try {
       final apiClient = GetIt.I<ApiClient>();
-      final response = await apiClient.get('/api/style-work-orders/current/${widget.selectedLoomNo}');
+      print('🌐 API çağrısı yapılıyor: /api/pieces/loom-workorder-pieces (POST)');
+      final response = await apiClient.post('/api/pieces/loom-workorder-pieces', data: {'loomNo': widget.selectedLoomNo});
+      
+      print('📡 API Response Status: ${response.statusCode}');
+      print('📡 API Response Data: ${response.data}');
       
       if (response.statusCode == 200 && response.data != null) {
         final workOrderData = response.data;
         
-        // TOP NO'yu workOrderNo'dan al
-        if (workOrderData['workOrderNo'] != null) {
-          _topNoController.text = workOrderData['workOrderNo'].toString();
+        // Debug: API'den gelen tüm alanları yazdır
+        print('🔍 Loom Work Order Pieces API Response:');
+        if (workOrderData is List && workOrderData.isNotEmpty) {
+          final firstItem = workOrderData[0];
+          print('  First item: $firstItem');
+          
+          // TOP NO'yu pieceNo'dan al
+          if (firstItem['pieceNo'] != null) {
+            _topNoController.text = firstItem['pieceNo'].toString();
+            print('✅ TOP NO alındı: ${firstItem['pieceNo']}');
+          } else {
+            print('❌ pieceNo alanı bulunamadı');
+          }
+          
+          // METRE'yi productedLength'den al ve virgülden sonra 2 hane olacak şekilde formatla
+          if (firstItem['productedLength'] != null) {
+            final double value = firstItem['productedLength'].toDouble();
+            _metreController.text = value.toStringAsFixed(2).replaceAll('.', ',');
+            print('✅ METRE alındı: ${value.toStringAsFixed(2)}');
+          } else {
+            print('❌ productedLength alanı bulunamadı');
+          }
+        } else {
+          print('❌ API response boş veya geçersiz format');
         }
-        
-        // METRE'yi productedLength'den al ve virgülden sonra 2 hane olacak şekilde formatla
-        if (workOrderData['productedLength'] != null) {
-          final double value = workOrderData['productedLength'].toDouble();
-          _metreController.text = value.toStringAsFixed(2).replaceAll('.', ',');
-        }
+      } else {
+        print('❌ API Response başarısız - Status: ${response.statusCode}, Data: ${response.data}');
       }
     } catch (e) {
-      print('Work order verileri yükleme hatası: $e');
+      print('❌ Loom work order pieces verileri yükleme hatası: $e');
     } finally {
-      setState(() => _isLoadingWorkOrder = false);
+      if (mounted) {
+        setState(() => _isLoadingWorkOrder = false);
+      }
+      print('🏁 _loadWorkOrderData tamamlandı');
     }
   }
 
@@ -291,11 +330,11 @@ class _PieceCutFormState extends State<_PieceCutForm> {
             border: const OutlineInputBorder(),
             suffixIcon: _isLoadingWorkOrder
                 ? const SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                     child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(strokeWidth: 1.5),
                     ),
                   )
                 : null,
@@ -318,11 +357,11 @@ class _PieceCutFormState extends State<_PieceCutForm> {
             border: const OutlineInputBorder(),
             suffixIcon: _isLoadingWorkOrder
                 ? const SizedBox(
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                     child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      padding: EdgeInsets.all(8.0),
+                      child: CircularProgressIndicator(strokeWidth: 1.5),
                     ),
                   )
                 : null,
@@ -342,25 +381,63 @@ class _PieceCutFormState extends State<_PieceCutForm> {
           },
         ),
             const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: _isLoading || !_isFormValid() ? null : _submitForm,
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size(double.infinity, 56), // Buton yüksekliğini artır
-            side: BorderSide(
-              color: _isFormValid() 
-                  ? const Color(0xFF1565C0)  // Aktif durumda mavi çerçeve
-                  : Colors.grey,              // Pasif durumda gri çerçeve
-              width: _isFormValid() ? 2 : 1,  // Aktif durumda 2px, pasif durumda 1px
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: Colors.grey,
+                        width: 1,
+                      ),
+                      backgroundColor: Colors.transparent,
+                      foregroundColor: Theme.of(context).brightness == Brightness.dark 
+                          ? Colors.white 
+                          : Colors.black,
+                      elevation: 0,
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: Text('action_cancel_submit'.tr()),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: _isLoading || !_isFormValid() ? null : _submitForm,
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 56),
+                      side: BorderSide(
+                        color: _isFormValid() 
+                            ? const Color(0xFF1565C0)  // Aktif durumda mavi çerçeve
+                            : Colors.grey,              // Pasif durumda gri çerçeve
+                        width: _isFormValid() ? 2 : 1,  // Aktif durumda 2px, pasif durumda 1px
+                      ),
+                      backgroundColor: _isFormValid() 
+                          ? const Color(0xFF1565C0) 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF2D2D30) 
+                              : Colors.white),
+                      foregroundColor: _isFormValid() 
+                          ? Colors.white 
+                          : (Theme.of(context).brightness == Brightness.dark 
+                              ? const Color(0xFF5A5A5A) 
+                              : Colors.black87),
+                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : Text('action_submit'.tr()),
+                  ),
+                ),
+              ],
             ),
-          ),
-          child: _isLoading
-              ? const SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text('action_submit'.tr()),
-        ),
           ],
           ),
         ),
