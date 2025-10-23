@@ -286,7 +286,7 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
       child: Container(
         padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Column(

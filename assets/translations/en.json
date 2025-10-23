@@ -1,6 +1,6 @@
 {
     "title_looms": "LOOMS",
-    "label_group": "Group",
+    "label_group": "Loom Group",
     "select_all": "Select All",
     "btn_refresh": "Refresh",
     "error_load_failed": "Failed to load data",
@@ -41,7 +41,7 @@
     "piece_cut_title": "PIECE CUT",
     "label_tezgah": "LOOM",
     "label_top_no": "PIECE NO",
-    "label_metre": "METRE",
+    "label_metre": "METER",
     "end_ops_title": "Operation will be ended",
     "end_ops_body": "Operation(s) on selected looms will be ended.",
     "end_ops_success": "Operation(s) ended",
@@ -81,5 +81,10 @@
     "settings_wrong_password": "Wrong password!",
     "settings_password_required": "Admin password required to change API URL!",
     "settings_password_change_required": "Current password required to change password!",
-    "settings_invalid_url": "Invalid URL format"
+    "settings_invalid_url": "Invalid URL format",
+    "validation_personnel_no_required": "Personnel No required",
+    "validation_personnel_name_required": "Personnel Name required",
+    "validation_top_no_required": "Piece No required",
+    "validation_metre_required": "Metre required",
+    "action_submit": "Submit"
 }

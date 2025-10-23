@@ -81,5 +81,10 @@
     "settings_wrong_password": "Yanlış şifre!",
     "settings_password_required": "API URL değiştirmek için admin şifresi gerekli!",
     "settings_password_change_required": "Şifre değiştirmek için mevcut şifre gerekli!",
-    "settings_invalid_url": "Geçersiz URL formatı"
+    "settings_invalid_url": "Geçersiz URL formatı",
+    "validation_personnel_no_required": "Personel No gerekli",
+    "validation_personnel_name_required": "Personel Adı gerekli",
+    "validation_top_no_required": "Top No gerekli",
+    "validation_metre_required": "Metre gerekli",
+    "action_submit": "Gönder"
 }

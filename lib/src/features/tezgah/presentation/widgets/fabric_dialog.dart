@@ -19,7 +19,7 @@ Future<void> showFabricDialog(BuildContext context,
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(dialogContext).dialogBackgroundColor,
             borderRadius: BorderRadius.circular(24),
           ),
           child: Column(
@@ -85,22 +85,37 @@ Future<void> showFabricDialog(BuildContext context,
 
 class _WideActionButton extends StatelessWidget {
   final String text;
-  final void Function() onPressed;
-  const _WideActionButton({required this.text, required this.onPressed});
+  final VoidCallback onPressed;
+
+  const _WideActionButton({
+    required this.text,
+    required this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF1565C0),
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          elevation: 8,
+          shadowColor: const Color(0xFF1565C0).withOpacity(0.3),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
         ),
         onPressed: onPressed,
-        child: Text(text, textAlign: TextAlign.center),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }

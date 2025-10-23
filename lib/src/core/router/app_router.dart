@@ -4,6 +4,7 @@ import '../../features/tezgah/presentation/pages/home_page.dart';
 import '../../features/tezgah/presentation/pages/operations_page.dart';
 import '../../features/tezgah/presentation/pages/weaving_page.dart';
 import '../../features/tezgah/presentation/pages/warp_operations_page.dart';
+import '../../features/tezgah/presentation/pages/piece_cut_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/settings/presentation/pages/connection_settings_page.dart';
 
@@ -51,6 +52,14 @@ GoRouter buildRouter() {
         path: '/connection-settings',
         name: 'connection-settings',
         builder: (context, state) => const ConnectionSettingsPage(),
+      ),
+      GoRoute(
+        path: '/piece-cut',
+        name: 'piece-cut',
+        builder: (context, state) {
+          final String initial = (state.extra as String?) ?? '';
+          return PieceCutPage(selectedLoomNo: initial);
+        },
       ),
     ],
   );

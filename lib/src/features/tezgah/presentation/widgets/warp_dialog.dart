@@ -17,7 +17,7 @@ Future<void> showWarpDialog(BuildContext context,
         child: Container(
           padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).dialogBackgroundColor,
             borderRadius: BorderRadius.circular(24),
           ),
           child: Column(

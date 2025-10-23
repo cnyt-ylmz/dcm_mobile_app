@@ -12,7 +12,6 @@ import '../../domain/repositories/tezgah_repository.dart';
 import '../bloc/tezgah_bloc.dart';
 import '../widgets/fabric_dialog.dart';
 import '../widgets/warp_dialog.dart';
-import '../widgets/piece_cut_dialog.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/widgets/result_dialog.dart';
 
@@ -40,7 +39,14 @@ class _HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('title_looms'.tr()),
+        title: Text(
+          'DCM Mobile',
+          style: TextStyle(
+            color: const Color(0xFF1565C0),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -52,16 +58,16 @@ class _HomeView extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(MediaQuery.of(context).orientation == Orientation.landscape ? 8.0 : 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _GroupDropdown(),
-            const SizedBox(height: 12),
+            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
             _SelectAllRow(),
-            const SizedBox(height: 12),
+            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
             const Expanded(child: _TezgahGrid()),
-            const SizedBox(height: 12),
+            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
             _BottomActions(),
           ],
         ),
@@ -87,7 +93,8 @@ class _GroupDropdown extends StatelessWidget {
               context.read<TezgahBloc>().add(TezgahGroupChanged(value)),
           decoration: InputDecoration(
               border: const OutlineInputBorder(),
-              labelText: 'label_group'.tr()),
+              labelText: 'label_group'.tr(),
+          ),
         );
       },
     );
@@ -151,16 +158,16 @@ class _TezgahGrid extends StatelessWidget {
             final bool isTablet = media.size.shortestSide >= 600;
             final bool isLandscape = media.orientation == Orientation.landscape;
             final double desiredTileWidth = isTablet
-                ? (isLandscape ? 220 : 200)
-                : (isLandscape ? 180 : 160);
+                ? (isLandscape ? 200 : 180)
+                : (isLandscape ? 140 : 160);
             int crossAxisCount = (maxWidth / desiredTileWidth).floor();
-            crossAxisCount = crossAxisCount.clamp(2, 10);
+            crossAxisCount = crossAxisCount.clamp(2, 8);
 
             // Hesaplanan hücre genişliğine göre aspect ratio
             final double totalSpacing = spacing * (crossAxisCount - 1);
             final double tileWidth = (maxWidth - totalSpacing) / crossAxisCount;
             final double tileHeight =
-                isLandscape ? 90 : 120; // başlık + 2 satır (daha kompakt)
+                isLandscape ? 80 : 120; // başlık + 2 satır (daha kompakt)
             final double childAspectRatio = tileWidth / tileHeight;
 
             return GridView.builder(
@@ -179,11 +186,11 @@ class _TezgahGrid extends StatelessWidget {
                       .add(TezgahToggleSelection(item.id)),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: _eventBackgroundColor(item.eventId),
+                      color: _eventBackgroundColor(item.eventId, context),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
                         color: item.isSelected
-                            ? Theme.of(context).colorScheme.primary
+                            ? const Color(0xFF1565C0)
                             : Colors.grey.shade300,
                         width: item.isSelected ? 2 : 1,
                       ),
@@ -193,14 +200,14 @@ class _TezgahGrid extends StatelessWidget {
                       children: [
                         // Sol üst köşede Loom No
                         Positioned(
-                          top: 0,
+                          top: -5,
                           left: 0,
                           child: Text(
                             item.loomNo,
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blue.shade700,
+                              color: const Color(0xFF1565C0),
                             ),
                           ),
                         ),
@@ -212,7 +219,7 @@ class _TezgahGrid extends StatelessWidget {
                             item.weaverName,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87,
                             ),
                           ),
                         ),
@@ -224,7 +231,7 @@ class _TezgahGrid extends StatelessWidget {
                             item.styleName,
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.black87,
+                              color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87,
                             ),
                           ),
                         ),
@@ -236,7 +243,7 @@ class _TezgahGrid extends StatelessWidget {
                             child: Text(
                               item.operationName,
                               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.black87,
+                                color: Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black87,
                               ),
                             ),
                           ),
@@ -253,18 +260,35 @@ class _TezgahGrid extends StatelessWidget {
   }
 }
 
-Color _eventBackgroundColor(int eventId) {
-  switch (eventId) {
-    case 0:
-      return const Color(0xFFE8F5E8); // Pastel yeşil - Çalışıyor
-    case 1:
-      return const Color(0xFFF5F5F5); // Pastel gri - Diğer Duruş
-    case 2:
-      return const Color(0xFFE3F2FD); // Pastel mavi - Atkı Duruşu
-    case 3:
-      return const Color(0xFFFFF3E0); // Pastel turuncu - Çözgü Duruşu
-    default:
-      return Colors.grey.shade100; // Varsayılan
+Color _eventBackgroundColor(int eventId, BuildContext context) {
+  final bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  
+  if (isDarkMode) {
+    switch (eventId) {
+      case 0:
+        return const Color(0xFF2D3A2D); // Cursor yeşil - Çalışıyor
+      case 1:
+        return const Color(0xFF2D2D30); // Cursor gri - Diğer Duruş
+      case 2:
+        return const Color(0xFF2D2F3A); // Cursor mavi - Atkı Duruşu
+      case 3:
+        return const Color(0xFF3A2D2D); // Cursor turuncu - Çözgü Duruşu
+      default:
+        return const Color(0xFF2D2D30); // Cursor varsayılan
+    }
+  } else {
+    switch (eventId) {
+      case 0:
+        return const Color(0xFFE8F5E8); // Pastel yeşil - Çalışıyor
+      case 1:
+        return const Color(0xFFF5F5F5); // Pastel gri - Diğer Duruş
+      case 2:
+        return const Color(0xFFE3F2FD); // Pastel mavi - Atkı Duruşu
+      case 3:
+        return const Color(0xFFFFF3E0); // Pastel turuncu - Çözgü Duruşu
+      default:
+        return Colors.grey.shade100; // Varsayılan
+    }
   }
 }
 
@@ -320,7 +344,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -344,7 +368,7 @@ class _BottomActions extends StatelessWidget {
             'btn_weaver'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
@@ -352,7 +376,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -375,7 +399,7 @@ class _BottomActions extends StatelessWidget {
             'btn_op_start'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
@@ -383,7 +407,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasSelection ? 8 : 2,
           shadowColor: hasSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -448,7 +472,7 @@ class _BottomActions extends StatelessWidget {
             'btn_op_end'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
@@ -456,7 +480,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -476,7 +500,7 @@ class _BottomActions extends StatelessWidget {
             'btn_fabric'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasExactlyOneSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
@@ -484,7 +508,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -504,7 +528,7 @@ class _BottomActions extends StatelessWidget {
             'btn_warp'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasExactlyOneSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
@@ -512,7 +536,7 @@ class _BottomActions extends StatelessWidget {
       ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: hasExactlyOneSelection ? const Color(0xFF1565C0) : null,
-          foregroundColor: hasExactlyOneSelection ? Colors.white : null,
+          foregroundColor: Colors.white,
           elevation: hasExactlyOneSelection ? 8 : 2,
           shadowColor: hasExactlyOneSelection ? const Color(0xFF1565C0).withOpacity(0.3) : Colors.grey.withOpacity(0.3),
           shape: RoundedRectangleBorder(
@@ -520,9 +544,13 @@ class _BottomActions extends StatelessWidget {
           ),
         ),
         onPressed: hasExactlyOneSelection
-            ? () {
+            ? () async {
                 final selectedLoom = selectedLoomsText();
-                showPieceCutDialog(context, selectedLoomNo: selectedLoom);
+                await context.pushNamed('piece-cut', extra: selectedLoom);
+                // Ana ekrana dönünce otomatik yenile
+                if (context.mounted) {
+                  context.read<TezgahBloc>().add(TezgahFetched());
+                }
               }
             : null,
         child: Container(
@@ -532,57 +560,93 @@ class _BottomActions extends StatelessWidget {
             'btn_piece_cut'.tr(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: hasExactlyOneSelection ? Colors.white : null,
+              color: Colors.white,
             ),
           ),
         ),
       ),
     ];
 
-    // Dikey modda (portrait) tüm ekranlar için 3 satır (2+2+2)
-    return Column(
-      children: [
-        // İlk 2 buton
-        Row(
-          children: buttons
-              .take(2)
-              .map((b) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: SizedBox(height: 60, child: b),
-                    ),
-                  ))
-              .toList(),
-        ),
-        const SizedBox(height: 12),
-        // İkinci 2 buton
-        Row(
-          children: buttons
-              .skip(2)
-              .take(2)
-              .map((b) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: SizedBox(height: 60, child: b),
-                    ),
-                  ))
-              .toList(),
-        ),
-        const SizedBox(height: 12),
-        // Son 2 buton
-        Row(
-          children: buttons
-              .skip(4)
-              .map((b) => Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: SizedBox(height: 60, child: b),
-                    ),
-                  ))
-              .toList(),
-        ),
-      ],
-    );
+    // Responsive buton düzeni
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+    
+    if (isLandscape) {
+      // Landscape modda 2 satır (3+3)
+      return Column(
+        children: [
+          // İlk 3 buton
+          Row(
+            children: buttons
+                .take(3)
+                .map((b) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: SizedBox(height: 50, child: b),
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+          // Son 3 buton
+          Row(
+            children: buttons
+                .skip(3)
+                .map((b) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: SizedBox(height: 50, child: b),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
+      );
+    } else {
+      // Portrait modda 3 satır (2+2+2)
+      return Column(
+        children: [
+          // İlk 2 buton
+          Row(
+            children: buttons
+                .take(2)
+                .map((b) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: SizedBox(height: 60, child: b),
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 12),
+          // İkinci 2 buton
+          Row(
+            children: buttons
+                .skip(2)
+                .take(2)
+                .map((b) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: SizedBox(height: 60, child: b),
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 12),
+          // Son 2 buton
+          Row(
+            children: buttons
+                .skip(4)
+                .map((b) => Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: SizedBox(height: 60, child: b),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
+      );
+    }
   }
 }
 
