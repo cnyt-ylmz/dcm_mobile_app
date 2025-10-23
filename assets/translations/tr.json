@@ -1,6 +1,6 @@
 {
     "title_looms": "TEZGAHLAR",
-    "label_group": "Grup",
+    "label_group": "Tezgah Grup",
     "select_all": "Hepsini Seç",
     "btn_refresh": "Yenile",
     "error_load_failed": "Veriler yüklenemedi",
@@ -86,5 +86,5 @@
     "validation_personnel_name_required": "Personel Adı gerekli",
     "validation_top_no_required": "Top No gerekli",
     "validation_metre_required": "Metre gerekli",
-    "action_submit": "Gönder"
+    "action_submit": "GÖNDER"
 }

@@ -23,8 +23,8 @@ class PieceCutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('btn_piece_cut'.tr()),
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        surfaceTintColor: Theme.of(context).appBarTheme.surfaceTintColor,
         elevation: 0,
       ),
       body: _PieceCutForm(selectedLoomNo: selectedLoomNo),
@@ -187,6 +187,7 @@ class _PieceCutFormState extends State<_PieceCutForm> {
 
   bool _isFormValid() {
     return _personnelIdController.text.isNotEmpty &&
+           _personnelNameController.text.isNotEmpty &&
            _topNoController.text.isNotEmpty &&
            _metreController.text.isNotEmpty;
   }
@@ -221,9 +222,10 @@ class _PieceCutFormState extends State<_PieceCutForm> {
       padding: const EdgeInsets.all(16.0),
       child: Form(
         key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
             TextField(
               controller: _loomNoController,
               readOnly: true,
@@ -342,6 +344,15 @@ class _PieceCutFormState extends State<_PieceCutForm> {
             const SizedBox(height: 24),
         ElevatedButton(
           onPressed: _isLoading || !_isFormValid() ? null : _submitForm,
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 56), // Buton yüksekliğini artır
+            side: BorderSide(
+              color: _isFormValid() 
+                  ? const Color(0xFF1565C0)  // Aktif durumda mavi çerçeve
+                  : Colors.grey,              // Pasif durumda gri çerçeve
+              width: _isFormValid() ? 2 : 1,  // Aktif durumda 2px, pasif durumda 1px
+            ),
+          ),
           child: _isLoading
               ? const SizedBox(
                   height: 20,
@@ -351,6 +362,7 @@ class _PieceCutFormState extends State<_PieceCutForm> {
               : Text('action_submit'.tr()),
         ),
           ],
+          ),
         ),
       ),
     );
