@@ -38,14 +38,14 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 20.0), // 2cm boşluk (20.0 * 2.54 = ~5cm, ama ekranda 2cm görünür)
+            padding: const EdgeInsets.only(bottom: 80.0), // 3cm yukarı çıkarmak için 80px (yaklaşık 3cm)
             child: Center(
               child: Text(
                 'teksdata',
                 style: GoogleFonts.orbitron(
                   color: const Color(0xFF4285F4), // Mavi renk
                   fontWeight: FontWeight.w600,
-                  fontSize: 24,
+                  fontSize: 48, // 48px yazı boyutu
                 ),
               ),
             ),
