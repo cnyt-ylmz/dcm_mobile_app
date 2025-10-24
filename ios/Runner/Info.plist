@@ -48,6 +48,8 @@
 		<key>NSCameraUsageDescription</key>
 		<string>Bu uygulama QR kod ve barkod okumak için kameraya erişim gerektirir.</string>
 		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 	</dict>
 </plist>

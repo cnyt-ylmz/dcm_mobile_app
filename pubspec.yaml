@@ -38,6 +38,7 @@ flutter:
 flutter_native_splash:
   color: "#ffffff"
   color_dark: "#1E1E1E"
+  fullscreen: true
   android_12:
     color: "#ffffff"
     color_dark: "#1E1E1E"

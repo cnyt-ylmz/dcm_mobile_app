@@ -7,17 +7,11 @@ import '../../features/tezgah/presentation/pages/warp_operations_page.dart';
 import '../../features/tezgah/presentation/pages/piece_cut_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/settings/presentation/pages/connection_settings_page.dart';
-import '../widgets/splash_screen.dart';
 
 GoRouter buildRouter() {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/home',
     routes: <RouteBase>[
-      GoRoute(
-        path: '/splash',
-        name: 'splash',
-        builder: (context, state) => const SplashScreen(),
-      ),
       GoRoute(
         path: '/home',
         name: 'home',

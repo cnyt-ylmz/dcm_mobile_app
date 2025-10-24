@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'src/core/di/di.dart';
 import 'src/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Preserve splash screen
+  FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
+  
   await EasyLocalization.ensureInitialized();
   await configureDependencies(GetIt.I);
 
@@ -30,6 +36,10 @@ void main() async {
       child: const FazApp(),
     ),
   );
+
+  // 2 saniye bekle, sonra splash'ı kaldır
+  await Future.delayed(const Duration(seconds: 2));
+  FlutterNativeSplash.remove();
 }
 
 class FazApp extends StatelessWidget {
@@ -37,6 +47,12 @@ class FazApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ana uygulama için sistem UI'ını normal moda çevir (saat görünsün)
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.top, // Status bar (saat) görünür
+      SystemUiOverlay.bottom, // Navigation bar görünür
+    ]);
+    
     final GoRouter router = buildRouter();
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
