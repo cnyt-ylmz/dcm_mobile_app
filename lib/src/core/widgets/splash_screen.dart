@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 style: GoogleFonts.orbitron(
                   color: const Color(0xFF4285F4), // Mavi renk
                   fontWeight: FontWeight.w600,
-                  fontSize: 48, // 48px yazı boyutu
+                  fontSize: 32, // 32px yazı boyutu
                 ),
               ),
             ),
