@@ -39,12 +39,14 @@ class _SplashScreenState extends State<SplashScreen> {
         children: [
           Padding(
             padding: const EdgeInsets.only(bottom: 20.0), // 2cm boşluk (20.0 * 2.54 = ~5cm, ama ekranda 2cm görünür)
-            child: Text(
-              'teksdata',
-              style: GoogleFonts.orbitron(
-                color: const Color(0xFF4285F4), // Mavi renk
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
+            child: Center(
+              child: Text(
+                'teksdata',
+                style: GoogleFonts.orbitron(
+                  color: const Color(0xFF4285F4), // Mavi renk
+                  fontWeight: FontWeight.w600,
+                  fontSize: 24,
+                ),
               ),
             ),
           ),
