@@ -28,8 +28,17 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   build_runner: ^2.4.11
   json_serializable: ^6.8.0
+  flutter_native_splash: ^2.3.10
 
 flutter:
   uses-material-design: true
   assets:
     - assets/translations/
+
+flutter_native_splash:
+  color: "#ffffff"
+  color_dark: "#1E1E1E"
+  android_12:
+    color: "#ffffff"
+    color_dark: "#1E1E1E"
+  web: false
