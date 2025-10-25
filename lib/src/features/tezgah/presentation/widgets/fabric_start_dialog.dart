@@ -79,7 +79,12 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('İş emri alınamadı: $e')),
+          SnackBar(
+            content: Text(
+              '${'error_work_order_load_failed'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()})}: $e',
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          ),
         );
       }
     } finally {
@@ -171,6 +176,18 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
     );
   }
 
+  // API'den gelen hata mesajlarını çeviri anahtarları ile değiştir
+  String _translateErrorMessage(String? message) {
+    if (message == null) return '';
+    
+    // Türkçe hata mesajlarını çeviri anahtarları ile değiştir
+    if (message.contains('İş emri numarasına ilişkin tanımlı dokuma iş emri bulunamadı')) {
+      return 'error_work_order_not_found'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()});
+    }
+    
+    return message; // Bilinmeyen hata mesajları için orijinal mesajı döndür
+  }
+
   // Ortak submit metodu - status parametresi ile hangi işlem olduğunu belirler
   Future<void> _submitFabricOperation({
     required int status, // 0: başlat, 1: bitir, 2: durdur
@@ -240,7 +257,7 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
       print("Response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop(); // Dialog'ı kapat
+        Navigator.of(context).pop(true); // Dialog'ı kapat ve başarılı olduğunu belirt
         
         // API response'unda status kontrolü
         final bool isSuccess = response.data['status'] == true;
@@ -250,10 +267,10 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
           context: context,
           successItems: isSuccess ? [_loomsController.text.trim()] : [],
           failedItems: isSuccess ? [] : [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Kumaş İşlemi Sonucu',
-          errorMessage: isSuccess ? null : response.data['message'],
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'fabric_operation_result'.tr(),
+          errorMessage: isSuccess ? null : _translateErrorMessage(response.data['message']),
         );
       }
     } catch (e) {
@@ -266,9 +283,9 @@ class _FabricStartDialogState extends State<FabricStartDialog> {
           context: context,
           successItems: [],
           failedItems: [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Kumaş İşlemi Sonucu',
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'fabric_operation_result'.tr(),
           errorMessage: e.toString(),
         );
       }

@@ -248,11 +248,14 @@ class _PieceCutFormState extends State<_PieceCutForm> {
       builder: (context) => ResultDialog(
         successItems: successItems,
         failedItems: failedItems,
-        successTitle: 'Başarılı',
-        failedTitle: 'Başarısız',
-        dialogTitle: 'Top Kesimi Sonucu',
+        successTitle: 'successful'.tr(),
+        failedTitle: 'failed'.tr(),
+        dialogTitle: 'piece_cut_result'.tr(),
       ),
-    );
+    ).then((_) {
+      // Dialog kapandıktan sonra ana sayfaya dön ve refresh et
+      Navigator.of(context).pop(true);
+    });
   }
 
   @override

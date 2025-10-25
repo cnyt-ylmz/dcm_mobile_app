@@ -40,26 +40,13 @@ class _HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'teksdata',
-              style: GoogleFonts.orbitron(
-                color: const Color(0xFF4285F4), // Mavi renk
-                fontWeight: FontWeight.w600,
-                fontSize: 24,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'DCM Mobile',
-              style: TextStyle(
-                color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        title: Text(
+          'teksdata',
+          style: GoogleFonts.orbitron(
+            color: const Color(0xFF3868B9), // Yeni mavi renk
+            fontWeight: FontWeight.w600,
+            fontSize: 28,
+          ),
         ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
@@ -447,13 +434,27 @@ class _BottomActions extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
                       title: Text('end_ops_warn_title'.tr()),
-                      content: Text('end_ops_warn_body'
-                          .tr(namedArgs: {'list': noOp.join(', ')})),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(),
-                            child: Text('action_ok'.tr()))
-                      ],
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('end_ops_warn_body'
+                              .tr(namedArgs: {'list': noOp.join(', ')})),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () => Navigator.of(ctx).pop(),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF1565C0),
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(100, 40),
+                                  ),
+                                  child: Text('action_ok'.tr())),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   );
                   return;
@@ -465,15 +466,36 @@ class _BottomActions extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
                     title: Text('end_ops_title'.tr()),
-                    content: Text('end_ops_body'.tr()),
-                    actions: [
-                      TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(false),
-                          child: Text('action_cancel'.tr())),
-                      ElevatedButton(
-                          onPressed: () => Navigator.of(ctx).pop(true),
-                          child: Text('action_ok'.tr())),
-                    ],
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('end_ops_body'.tr()),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
+                                  ),
+                                  child: Text('action_cancel'.tr())),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton(
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF1565C0),
+                                    foregroundColor: Colors.white,
+                                    minimumSize: const Size(100, 40),
+                                  ),
+                                  child: Text('action_ok'.tr())),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
 
@@ -564,9 +586,9 @@ class _BottomActions extends StatelessWidget {
         onPressed: hasExactlyOneSelection
             ? () async {
                 final selectedLoom = selectedLoomsText();
-                await context.pushNamed('piece-cut', extra: selectedLoom);
+                final result = await context.pushNamed('piece-cut', extra: selectedLoom);
                 // Ana ekrana dönünce otomatik yenile
-                if (context.mounted) {
+                if (result == true && context.mounted) {
                   context.read<TezgahBloc>().add(TezgahFetched());
                 }
               }
@@ -729,9 +751,9 @@ Future<void> _handleEndOperation(BuildContext context) async {
       context: context,
       successItems: selectedItems.map((e) => e.id).toList(),
       failedItems: [],
-      successTitle: 'Başarılı',
-      failedTitle: 'Başarısız',
-      dialogTitle: 'Operasyon Sonlandırma Sonucu',
+      successTitle: 'successful'.tr(),
+      failedTitle: 'failed'.tr(),
+      dialogTitle: 'operation_end_result'.tr(),
     );
 
     // Otomatik yenileme
@@ -750,9 +772,9 @@ Future<void> _handleEndOperation(BuildContext context) async {
       context: context,
       successItems: [],
       failedItems: selectedItems.map((e) => e.id).toList(),
-      successTitle: 'Başarılı',
-      failedTitle: 'Başarısız',
-      dialogTitle: 'Operasyon Sonlandırma Sonucu',
+      successTitle: 'successful'.tr(),
+      failedTitle: 'failed'.tr(),
+      dialogTitle: 'operation_end_result'.tr(),
       errorMessage: e.toString(),
     );
   }

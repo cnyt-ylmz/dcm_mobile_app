@@ -61,8 +61,10 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
     try {
       final apiClient = GetIt.I<ApiClient>();
 
+      print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/next/$loomNo");
+      
       final response = await apiClient.get(
-        '/api/style-work-orders/current/$loomNo',
+        '/api/style-work-orders/next/$loomNo',
         options: Options(
           headers: {'Content-Type': 'application/json'},
         ),
@@ -78,7 +80,12 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Mevcut iş emri alınamadı: $e')),
+          SnackBar(
+            content: Text(
+              '${'error_current_work_order_load_failed'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()})}: $e',
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          ),
         );
       }
     } finally {
@@ -150,6 +157,18 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
     return false;
   }
 
+  // API'den gelen hata mesajlarını çeviri anahtarları ile değiştir
+  String _translateErrorMessage(String? message) {
+    if (message == null) return '';
+    
+    // Türkçe hata mesajlarını çeviri anahtarları ile değiştir
+    if (message.contains('İş emri numarasına ilişkin tanımlı dokuma iş emri bulunamadı')) {
+      return 'error_work_order_not_found'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()});
+    }
+    
+    return message; // Bilinmeyen hata mesajları için orijinal mesajı döndür
+  }
+
   // Ortak submit metodu - status parametresi ile hangi işlem olduğunu belirler
   Future<void> _submitFabricOperation({
     required int status, // 0: başlat, 1: bitir, 2: durdur
@@ -219,7 +238,7 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
       print("Response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop(); // Dialog'ı kapat
+        Navigator.of(context).pop(true); // Dialog'ı kapat ve başarılı olduğunu belirt
         
         // API response'unda status kontrolü
         final bool isSuccess = response.data['status'] == true;
@@ -229,10 +248,10 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
           context: context,
           successItems: isSuccess ? [_loomsController.text.trim()] : [],
           failedItems: isSuccess ? [] : [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Kumaş İşlemi Sonucu',
-          errorMessage: isSuccess ? null : response.data['message'],
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'fabric_operation_result'.tr(),
+          errorMessage: isSuccess ? null : _translateErrorMessage(response.data['message']),
         );
       }
     } catch (e) {
@@ -245,9 +264,9 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
           context: context,
           successItems: [],
           failedItems: [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Kumaş İşlemi Sonucu',
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'fabric_operation_result'.tr(),
           errorMessage: e.toString(),
         );
       }
@@ -328,6 +347,7 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _orderNoController,
+              readOnly: true,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'label_fabric_order_no'.tr(),

@@ -60,10 +60,10 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
     print("_loadWarpOrder (STOP) called with loomNo: $loomNo");
     setState(() => _isLoadingWorkOrder = true);
     try {
-      // API çağrısı - Warp current endpoint (stop için)
+      // API çağrısı - Warp current endpoint
       final apiClient = GetIt.I<ApiClient>();
 
-      print("API çağrısı yapılıyor: /api/warps/current/$loomNo");
+      print("🌐 API Request: http://95.70.139.125:5100/api/warps/current/$loomNo");
       final response = await apiClient.get(
         '/api/warps/current/$loomNo',
         options: Options(
@@ -82,8 +82,7 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
         print("WorkOrderNo: ${response.data[0]['workOrderNo']}");
         if (mounted) {
           setState(() {
-            _orderNoController.text =
-                response.data[0]['workOrderNo'].toString();
+            _orderNoController.text = response.data[0]['workOrderNo'].toString();
           });
         }
       } else {
@@ -93,7 +92,12 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
       print("API Hatası: $e");
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Çözgü iş emri alınamadı: $e')),
+          SnackBar(
+            content: Text(
+              '${'error_warp_order_load_failed'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()})}: $e',
+              style: const TextStyle(fontSize: 16.0),
+            ),
+          ),
         );
       }
     } finally {
@@ -200,7 +204,7 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
       print("Response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop(); // Dialog'ı kapat
+        Navigator.of(context).pop(true); // Dialog'ı kapat ve başarılı olduğunu belirt
         
         // API response'unda status kontrolü
         final bool isSuccess = response.data['status'] == true;
@@ -210,10 +214,10 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
           context: context,
           successItems: isSuccess ? [_loomsController.text.trim()] : [],
           failedItems: isSuccess ? [] : [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Çözgü İşlemi Sonucu',
-          errorMessage: isSuccess ? null : response.data['message'],
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'warp_operation_result'.tr(),
+          errorMessage: isSuccess ? null : _translateErrorMessage(response.data['message']),
         );
       }
     } catch (e) {
@@ -226,10 +230,10 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
           context: context,
           successItems: [],
           failedItems: [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Çözgü İşlemi Sonucu',
-          errorMessage: e.toString(),
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'warp_operation_result'.tr(),
+          errorMessage: _translateErrorMessage(e.toString()),
         );
       }
     } finally {
@@ -246,6 +250,14 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
         // Sadece setState çağır, form validasyonu _isValidForm() ile yapılıyor
       });
     }
+  }
+
+  String _translateErrorMessage(String? message) {
+    if (message == null) return '';
+    if (message.contains('İş emri numarasına ilişkin tanımlı çözgü iş emri bulunamadı')) {
+      return 'error_warp_order_not_found'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()});
+    }
+    return message;
   }
 
   void _onIdChanged() {
@@ -341,6 +353,7 @@ class _WarpStopDialogState extends State<WarpStopDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _orderNoController,
+              readOnly: true,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 labelText: 'label_warp_order_no'.tr(),

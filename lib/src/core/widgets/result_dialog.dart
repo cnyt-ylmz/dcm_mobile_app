@@ -119,6 +119,7 @@ class _ResultDialogState extends State<ResultDialog> {
                         widget.errorMessage!,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.red.shade700,
+                          fontSize: 16.0,
                         ),
                       ),
                     ),
@@ -131,14 +132,19 @@ class _ResultDialogState extends State<ResultDialog> {
       ),
       // Başarısız işlemler için Tamam butonu ekle
       actions: widget.failedItems.isNotEmpty ? [
-        ElevatedButton(
-          onPressed: () => Navigator.of(context).pop(),
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1565C0),
+                foregroundColor: Colors.white,
+                minimumSize: const Size(100, 40),
+              ),
+              child: Text('action_ok'.tr()),
             ),
-          ),
-          child: Text('action_ok'.tr()),
+          ],
         ),
       ] : null,
     );

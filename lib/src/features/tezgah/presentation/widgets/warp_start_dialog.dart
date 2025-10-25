@@ -206,7 +206,7 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
       print("Response: ${response.data}");
 
       if (mounted) {
-        Navigator.of(context).pop(); // Dialog'ı kapat
+        Navigator.of(context).pop(true); // Dialog'ı kapat ve başarılı olduğunu belirt
         
         // API response'unda status kontrolü
         final bool isSuccess = response.data['status'] == true;
@@ -216,10 +216,10 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
           context: context,
           successItems: isSuccess ? [_loomsController.text.trim()] : [],
           failedItems: isSuccess ? [] : [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Çözgü İşlemi Sonucu',
-          errorMessage: isSuccess ? null : response.data['message'],
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'warp_operation_result'.tr(),
+          errorMessage: isSuccess ? null : _translateErrorMessage(response.data['message']),
         );
       }
     } catch (e) {
@@ -232,10 +232,10 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
           context: context,
           successItems: [],
           failedItems: [_loomsController.text.trim()],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Çözgü İşlemi Sonucu',
-          errorMessage: e.toString(),
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'warp_operation_result'.tr(),
+          errorMessage: _translateErrorMessage(e.toString()),
         );
       }
     } finally {
@@ -252,6 +252,14 @@ class _WarpStartDialogState extends State<WarpStartDialog> {
         // Sadece setState çağır, form validasyonu _isValidForm() ile yapılıyor
       });
     }
+  }
+
+  String _translateErrorMessage(String? message) {
+    if (message == null) return '';
+    if (message.contains('İş emri numarasına ilişkin tanımlı çözgü iş emri bulunamadı')) {
+      return 'error_warp_order_not_found'.tr(namedArgs: {'orderNo': _orderNoController.text.trim()});
+    }
+    return message;
   }
 
   void _onIdChanged() {

@@ -420,9 +420,9 @@ class _OperationStartFormState extends State<_OperationStartForm> {
           context: context,
           successItems: tezgahIds,
           failedItems: [],
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Operasyon Başlatma Sonucu',
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'operation_start_result'.tr(),
         );
       }
     } catch (e) {
@@ -436,9 +436,9 @@ class _OperationStartFormState extends State<_OperationStartForm> {
           context: context,
           successItems: [],
           failedItems: tezgahIds,
-          successTitle: 'Başarılı',
-          failedTitle: 'Başarısız',
-          dialogTitle: 'Operasyon Başlatma Sonucu',
+          successTitle: 'successful'.tr(),
+          failedTitle: 'failed'.tr(),
+          dialogTitle: 'operation_start_result'.tr(),
           errorMessage: e.toString(),
         );
       }

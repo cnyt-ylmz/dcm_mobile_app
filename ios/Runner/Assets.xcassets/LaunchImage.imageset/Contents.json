@@ -1,17 +1,50 @@
 {
   "images" : [
     {
-      "filename" : "LaunchImage.png",
+      "filename" : "DCM_Mobile Icon (120 x 120 piksel).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "LaunchImage@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "DCM_Mobile Icon (120 x 120 piksel) 1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "DCM_Mobile Icon (240 x 240 piksel).png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "LaunchImage@3x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "DCM_Mobile Icon (240 x 240 piksel) 1.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "filename" : "DCM_Mobile Icon (360 x 360 piksel).png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "DCM_Mobile Icon (360 x 360 piksel) 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
