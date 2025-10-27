@@ -433,12 +433,17 @@ class _BottomActions extends StatelessWidget {
                     builder: (ctx) => AlertDialog(
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16)),
-                      title: Text('end_ops_warn_title'.tr()),
+                      title: Text(
+                        'end_ops_warn_title'.tr(),
+                        style: Theme.of(ctx).textTheme.titleLarge,
+                      ),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('end_ops_warn_body'
-                              .tr(namedArgs: {'list': noOp.join(', ')})),
+                          Text(
+                            'end_ops_warn_body'.tr(namedArgs: {'list': noOp.join(', ')}),
+                            style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(fontSize: 16.0),
+                          ),
                           const SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -586,6 +591,13 @@ class _BottomActions extends StatelessWidget {
         onPressed: hasExactlyOneSelection
             ? () async {
                 final selectedLoom = selectedLoomsText();
+                // İş emri kontrolü yap
+                final hasWorkOrder = await _checkWorkOrderForPieceCut(selectedLoom);
+                if (!hasWorkOrder) {
+                  // Dialog göster
+                  await _showNoWorkOrderDialog(context);
+                  return;
+                }
                 final result = await context.pushNamed('piece-cut', extra: selectedLoom);
                 // Ana ekrana dönünce otomatik yenile
                 if (result == true && context.mounted) {
@@ -778,4 +790,70 @@ Future<void> _handleEndOperation(BuildContext context) async {
       errorMessage: e.toString(),
     );
   }
+}
+
+// İş emri kontrolü için metod
+Future<bool> _checkWorkOrderForPieceCut(String loomNo) async {
+  try {
+    final apiClient = GetIt.I<ApiClient>();
+    
+    print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/current/$loomNo");
+    
+    final response = await apiClient.get(
+      '/api/style-work-orders/current/$loomNo',
+      options: Options(
+        headers: {'Content-Type': 'application/json'},
+      ),
+    );
+
+    if (response.data != null && response.data['workOrderNo'] != null) {
+      print("✅ Piece Cut - Work Order found: ${response.data['workOrderNo']}");
+      return true;
+    } else {
+      print("❌ Piece Cut - No Work Order found");
+      return false;
+    }
+  } catch (e) {
+    print("❌ Piece Cut - Work order check error: $e");
+    return false;
+  }
+}
+
+// İş emri olmadığında gösterilecek dialog
+Future<void> _showNoWorkOrderDialog(BuildContext context) async {
+  await showDialog<void>(
+    context: context,
+    barrierDismissible: true,
+    builder: (dialogContext) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: Text(
+          'piece_cut_no_work_order_title'.tr(),
+          style: Theme.of(dialogContext).textTheme.titleLarge,
+          textAlign: TextAlign.left,
+        ),
+        content: Text(
+          'piece_cut_no_work_order'.tr(),
+          style: Theme.of(dialogContext).textTheme.bodyMedium?.copyWith(fontSize: 16.0),
+          textAlign: TextAlign.left,
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(dialogContext).pop(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1565C0),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(100, 40),
+                ),
+                child: Text('action_ok'.tr()),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
 }

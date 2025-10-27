@@ -46,10 +46,10 @@ class _FabricDialogState extends State<_FabricDialog> {
       final apiClient = GetIt.I<ApiClient>();
       final loomNo = widget.initialLoomsText.trim();
       
-      print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/next/$loomNo");
+      print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/current/$loomNo");
       
       final response = await apiClient.get(
-        '/api/style-work-orders/next/$loomNo',
+        '/api/style-work-orders/current/$loomNo',
         options: Options(
           headers: {'Content-Type': 'application/json'},
         ),
@@ -60,8 +60,10 @@ class _FabricDialogState extends State<_FabricDialog> {
           _isLoading = false;
           if (response.data != null && response.data['workOrderNo'] != null) {
             _workOrderNo = response.data['workOrderNo'].toString();
+            print("✅ Fabric Dialog - Work Order No set: $_workOrderNo");
           } else {
             _workOrderNo = null;
+            print("❌ Fabric Dialog - Work Order No is null");
           }
         });
       }

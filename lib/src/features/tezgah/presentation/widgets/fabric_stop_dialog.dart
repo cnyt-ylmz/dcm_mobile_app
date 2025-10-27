@@ -61,10 +61,10 @@ class _FabricStopDialogState extends State<FabricStopDialog> {
     try {
       final apiClient = GetIt.I<ApiClient>();
 
-      print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/next/$loomNo");
+      print("🌐 API Request: http://95.70.139.125:5100/api/style-work-orders/current/$loomNo");
       
       final response = await apiClient.get(
-        '/api/style-work-orders/next/$loomNo',
+        '/api/style-work-orders/current/$loomNo',
         options: Options(
           headers: {'Content-Type': 'application/json'},
         ),

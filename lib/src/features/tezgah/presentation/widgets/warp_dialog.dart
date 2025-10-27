@@ -63,8 +63,10 @@ class _WarpDialogState extends State<_WarpDialog> {
               response.data.isNotEmpty && 
               response.data[0]['workOrderNo'] != null) {
             _workOrderNo = response.data[0]['workOrderNo'].toString();
+            print("✅ Warp Dialog - Work Order No set: $_workOrderNo");
           } else {
             _workOrderNo = null;
+            print("❌ Warp Dialog - Work Order No is null");
           }
         });
       }

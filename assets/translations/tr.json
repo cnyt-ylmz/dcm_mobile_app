@@ -105,5 +105,7 @@
   "error_warp_order_load_failed": "Çözgü iş emri {orderNo} alınamadı",
   "error_warp_order_not_found": "{orderNo} Çözgü İş Emri Bulunamadı!",
   "error_current_warp_order_load_failed": "Mevcut çözgü iş emri {orderNo} alınamadı",
-  "work_order_info": "İş Emri: {orderNo}"
+  "work_order_info": "İş Emri: {orderNo}",
+  "piece_cut_no_work_order": "Çalışan Kumaş İş emri olmadığından top kesim yapılamaz.",
+  "piece_cut_no_work_order_title": "Top Kesim Yapılamaz!"
 }

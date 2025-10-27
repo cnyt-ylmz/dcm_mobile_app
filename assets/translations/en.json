@@ -105,5 +105,7 @@
   "error_warp_order_load_failed": "Warp work order {orderNo} could not be loaded",
   "error_warp_order_not_found": "{orderNo} Warp Work Order Not Found!",
   "error_current_warp_order_load_failed": "Current warp work order {orderNo} could not be loaded",
-  "work_order_info": "Work Order: {orderNo}"
+  "work_order_info": "Work Order: {orderNo}",
+  "piece_cut_no_work_order": "Piece cutting cannot be performed as there is no active Fabric Work Order.",
+  "piece_cut_no_work_order_title": "Piece Cutting Not Available!"
 }
