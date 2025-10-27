@@ -70,7 +70,11 @@ class _ResultDialogState extends State<ResultDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: Text(widget.dialogTitle),
+      title: Text(
+        widget.dialogTitle,
+        style: Theme.of(context).textTheme.titleLarge, // 22px
+        textAlign: TextAlign.left,
+      ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,

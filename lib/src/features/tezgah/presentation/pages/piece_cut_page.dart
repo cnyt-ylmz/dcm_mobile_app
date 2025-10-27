@@ -170,28 +170,28 @@ class _PieceCutFormState extends State<_PieceCutForm> {
         '/api/DataMan/pieceCutting',
         data: {
           'loomNo': _loomNoController.text,
-          'personnelID': _personnelIdController.text,
-          'topNo': _topNoController.text,
-          'metre': _metreController.text,
+          'personnelID': int.parse(_personnelIdController.text), // String'i int'e çevir
+          'PieceNo': int.parse(_topNoController.text), // Backend field ismi: PieceNo
+          'PieceLength': double.parse(_metreController.text.replaceAll(',', '.')), // Backend field ismi: PieceLength
         },
       );
 
       if (response.statusCode == 200) {
         _showResultDialog(
-          successItems: ['${_loomNoController.text} tezgahı için top kesimi başarılı'],
+          successItems: ['piece_cut_success_message'.tr(namedArgs: {'loomNo': _loomNoController.text})],
           failedItems: [],
         );
         _clearForm();
       } else {
         _showResultDialog(
           successItems: [],
-          failedItems: ['${_loomNoController.text} tezgahı için top kesimi başarısız'],
+          failedItems: ['piece_cut_failed_message'.tr(namedArgs: {'loomNo': _loomNoController.text})],
         );
       }
     } catch (e) {
       _showResultDialog(
         successItems: [],
-        failedItems: ['Top kesimi işlemi başarısız: $e'],
+        failedItems: ['piece_cut_error_message'.tr(namedArgs: {'error': e.toString()})],
       );
     } finally {
       setState(() => _isLoading = false);
@@ -225,10 +225,30 @@ class _PieceCutFormState extends State<_PieceCutForm> {
   }
 
   bool _isFormValid() {
-    return _personnelIdController.text.isNotEmpty &&
-           _personnelNameController.text.isNotEmpty &&
-           _topNoController.text.isNotEmpty &&
-           _metreController.text.isNotEmpty;
+    if (_personnelIdController.text.isEmpty ||
+        _personnelNameController.text.isEmpty ||
+        _topNoController.text.isEmpty ||
+        _metreController.text.isEmpty) {
+      return false;
+    }
+    
+    // Top No kontrolü (0'dan büyük olmalı)
+    try {
+      final topNo = int.parse(_topNoController.text);
+      if (topNo <= 0) return false;
+    } catch (e) {
+      return false;
+    }
+    
+    // Metre kontrolü (0'dan büyük olmalı)
+    try {
+      final metre = double.parse(_metreController.text.replaceAll(',', '.'));
+      if (metre <= 0) return false;
+    } catch (e) {
+      return false;
+    }
+    
+    return true;
   }
 
   void _clearForm() {
@@ -349,6 +369,14 @@ class _PieceCutFormState extends State<_PieceCutForm> {
             if (value == null || value.isEmpty) {
               return 'validation_top_no_required'.tr();
             }
+            try {
+              final topNo = int.parse(value);
+              if (topNo <= 0) {
+                return 'Top No 0\'dan büyük olmalıdır';
+              }
+            } catch (e) {
+              return 'Geçerli bir Top No giriniz';
+            }
             return null;
           },
         ),
@@ -377,7 +405,12 @@ class _PieceCutFormState extends State<_PieceCutForm> {
             }
             // Virgülü noktaya çevirerek kontrol et
             final normalizedValue = value.replaceAll(',', '.');
-            if (double.tryParse(normalizedValue) == null) {
+            try {
+              final metre = double.parse(normalizedValue);
+              if (metre <= 0) {
+                return 'Metre 0\'dan büyük olmalıdır';
+              }
+            } catch (e) {
               return 'Geçerli bir sayı girin';
             }
             return null;

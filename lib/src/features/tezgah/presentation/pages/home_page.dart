@@ -435,7 +435,8 @@ class _BottomActions extends StatelessWidget {
                           borderRadius: BorderRadius.circular(16)),
                       title: Text(
                         'end_ops_warn_title'.tr(),
-                        style: Theme.of(ctx).textTheme.titleLarge,
+                        style: Theme.of(ctx).textTheme.titleLarge, // 22px
+                        textAlign: TextAlign.left,
                       ),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -470,7 +471,11 @@ class _BottomActions extends StatelessWidget {
                   builder: (ctx) => AlertDialog(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16)),
-                    title: Text('end_ops_title'.tr()),
+                    title: Text(
+                      'end_ops_title'.tr(),
+                      style: Theme.of(ctx).textTheme.titleLarge, // 22px
+                      textAlign: TextAlign.left,
+                    ),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [

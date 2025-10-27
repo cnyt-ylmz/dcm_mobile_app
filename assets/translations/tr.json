@@ -107,5 +107,8 @@
   "error_current_warp_order_load_failed": "Mevcut çözgü iş emri {orderNo} alınamadı",
   "work_order_info": "İş Emri: {orderNo}",
   "piece_cut_no_work_order": "Çalışan Kumaş İş emri olmadığından top kesim yapılamaz.",
-  "piece_cut_no_work_order_title": "Top Kesim Yapılamaz!"
+  "piece_cut_no_work_order_title": "Top Kesim Yapılamaz!",
+  "piece_cut_success_message": "{loomNo} tezgahı için top kesimi başarılı",
+  "piece_cut_failed_message": "{loomNo} tezgahı için top kesimi başarısız",
+  "piece_cut_error_message": "Top kesimi işlemi başarısız: {error}"
 }

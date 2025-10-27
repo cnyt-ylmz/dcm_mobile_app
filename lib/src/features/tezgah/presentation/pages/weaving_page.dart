@@ -227,7 +227,11 @@ class _WeaverFormState extends State<_WeaverForm> {
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('weaver_change_result'.tr()),
+        title: Text(
+          'weaver_change_result'.tr(),
+          style: Theme.of(context).textTheme.titleLarge, // 22px
+          textAlign: TextAlign.left,
+        ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

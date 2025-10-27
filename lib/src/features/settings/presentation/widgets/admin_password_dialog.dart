@@ -39,7 +39,13 @@ class _AdminPasswordDialogState extends State<AdminPasswordDialog> {
         children: [
           Icon(Icons.security, color: Theme.of(context).primaryColor),
           const SizedBox(width: 8),
-          Text('settings_admin_password'.tr()),
+          Expanded(
+            child: Text(
+              'settings_admin_password'.tr(),
+              style: Theme.of(context).textTheme.titleLarge, // 22px
+              textAlign: TextAlign.left,
+            ),
+          ),
         ],
       ),
       content: Column(
