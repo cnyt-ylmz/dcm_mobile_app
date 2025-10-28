@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class QRScannerWidget extends StatefulWidget {
@@ -17,29 +17,14 @@ class QRScannerWidget extends StatefulWidget {
 }
 
 class _QRScannerWidgetState extends State<QRScannerWidget> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
+  MobileScannerController controller = MobileScannerController();
   bool isFlashOn = false;
   bool _isScanning = true;
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (scanData.code != null && _isScanning && mounted) {
-        _isScanning = false; // Tekrar taramayı engelle
-        widget.onCodeScanned(scanData.code!);
-        // Ekranı kapat
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      }
-    });
   }
 
   @override
@@ -50,31 +35,24 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(isFlashOn ? Icons.flash_on : Icons.flash_off),
-            onPressed: () async {
-              await controller?.toggleFlash();
-              setState(() {
-                isFlashOn = !isFlashOn;
-              });
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
           Expanded(
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: const Color(0xFF1565C0),
-                borderRadius: 10,
-                borderLength: 30,
-                borderWidth: 10,
-                cutOutSize: 300,
-              ),
+            child: MobileScanner(
+              controller: controller,
+              onDetect: (capture) {
+                if (capture.barcodes.isNotEmpty && _isScanning && mounted) {
+                  final String? code = capture.barcodes.first.rawValue;
+                  if (code != null) {
+                    _isScanning = false; // Tekrar taramayı engelle
+                    widget.onCodeScanned(code);
+                    if (mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  }
+                }
+              },
             ),
           ),
           Container(
@@ -98,7 +76,6 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                   width: double.infinity,
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      // Manuel giriş için boş string gönder
                       widget.onCodeScanned('');
                       Navigator.of(context).pop();
                     },
