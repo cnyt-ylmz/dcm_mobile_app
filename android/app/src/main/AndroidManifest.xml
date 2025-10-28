@@ -1,7 +1,8 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.teksdata.dcm_mobile">
     <uses-permission android:name="android.permission.CAMERA" />
     <application
-        android:label="faz2"
+        android:label="DCM Mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

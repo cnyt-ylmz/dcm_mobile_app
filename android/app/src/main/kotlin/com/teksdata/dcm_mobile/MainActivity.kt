@@ -1,4 +1,4 @@
-package com.example.faz2
+package com.teksdata.dcm_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

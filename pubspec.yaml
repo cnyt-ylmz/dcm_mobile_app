@@ -1,5 +1,5 @@
 name: dcm_mobile
-description: DCM Mobile - Tezgah kontrol uygulaması (Clean Architecture + BLoC)
+description: DCM Mobile - Tezgah Kontrol Uygulaması (Clean Architecture + BLoC)
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -39,18 +39,19 @@ flutter:
 flutter_native_splash:
   color: "#ffffff"
   color_dark: "#1E1E1E"
-  image: assets/launch_logo.png
-  image_dark: assets/launch_logo_dark.png
+  image: assets/logo.png
+  image_dark: assets/logo.png
   fullscreen: false
   android_12:
     color: "#ffffff"
     color_dark: "#1E1E1E"
-    image: assets/launch_logo.png
-    image_dark: assets/launch_logo_dark.png
+    image: assets/logo.png
+    image_dark: assets/logo.png
   web: false
 
 flutter_launcher_icons:
   android: true
-  image_path: "assets/launch_logo.png"
-  adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/launch_logo.png"
+  image_path: "assets/logo.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logo.png"
+  min_sdk_android: 21
