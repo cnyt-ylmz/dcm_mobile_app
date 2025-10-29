@@ -1,23 +1,23 @@
 {
   "images" : [
     {
-      "filename" : "DCM_Mobile Icon (180 x 180 piksel).png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
       "filename" : "DCM_Mobile Icon (180 x 180 piksel) 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "DCM_Mobile Icon (240 x 240 piksel).png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "DCM_Mobile Icon (180 x 180 piksel).png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "DCM_Mobile Icon (240 x 240 piksel) 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "DCM_Mobile Icon (240 x 240 piksel) 1.png",
+      "filename" : "DCM_Mobile Icon (240 x 240 piksel).png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "DCM_Mobile Icon (360 x 360 piksel).png",
+      "filename" : "DCM_Mobile Icon (360 x 360 piksel) 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "DCM_Mobile Icon (360 x 360 piksel) 1.png",
+      "filename" : "DCM_Mobile Icon (360 x 360 piksel).png",
       "idiom" : "universal",
       "scale" : "3x"
     }
