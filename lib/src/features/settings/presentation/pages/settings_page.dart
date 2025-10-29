@@ -250,6 +250,7 @@ class _SettingsView extends StatelessWidget {
                   ),
             ),
             const SizedBox(height: 12),
+            _buildInfoRow('settings_manufacturer_label'.tr(), 'settings_manufacturer_value'.tr()),
             _buildInfoRow('settings_app_name'.tr(), 'DCM Mobile'),
             _buildInfoRow('settings_version'.tr(), '1.0.0'),
             _buildInfoRow('settings_api_url'.tr(), state.settings.apiBaseUrl),

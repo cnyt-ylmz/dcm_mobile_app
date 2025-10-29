@@ -63,17 +63,32 @@ class _HomeView extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).orientation == Orientation.landscape ? 8.0 : 16.0),
+        padding: EdgeInsets.all(
+            MediaQuery.of(context).orientation == Orientation.landscape
+                ? 8.0
+                : 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _GroupDropdown(),
-            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
+            SizedBox(
+                height: MediaQuery.of(context).orientation ==
+                        Orientation.landscape
+                    ? 8
+                    : 12),
             _SelectAllRow(),
-            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
+            SizedBox(
+                height: MediaQuery.of(context).orientation ==
+                        Orientation.landscape
+                    ? 8
+                    : 12),
             const Expanded(child: _TezgahGrid()),
-            SizedBox(height: MediaQuery.of(context).orientation == Orientation.landscape ? 8 : 12),
-            _BottomActions(),
+            SizedBox(
+                height: MediaQuery.of(context).orientation ==
+                        Orientation.landscape
+                    ? 8
+                    : 12),
+            const _BottomActions(),
           ],
         ),
       ),
@@ -329,14 +344,14 @@ class _TileText extends StatelessWidget {
 }
 
 class _BottomActions extends StatelessWidget {
+  const _BottomActions();
+
   @override
   Widget build(BuildContext context) {
-    // Tablet/telefon ayrımı için responsive düzen
     final double width = MediaQuery.of(context).size.width;
     final bool isWide = width >= 600;
     final bool hasSelection = context.select<TezgahBloc, bool>(
         (b) => b.state.items.any((e) => e.isSelected));
-
     final bool hasExactlyOneSelection = context.select<TezgahBloc, bool>(
         (b) => b.state.items.where((e) => e.isSelected).length == 1);
 
@@ -358,10 +373,9 @@ class _BottomActions extends StatelessWidget {
         ),
         onPressed: hasSelection
             ? () async {
-                final result = await context.pushNamed('weaving',
+                await context.pushNamed('weaving',
                     extra: selectedLoomsText());
-                // Eğer işlem başarılıysa tezgahları refresh et
-                if (result == true && context.mounted) {
+                if (context.mounted) {
                   context.read<TezgahBloc>().add(TezgahFetched());
                 }
               }
@@ -391,7 +405,6 @@ class _BottomActions extends StatelessWidget {
         onPressed: hasSelection
             ? () async {
                 await context.pushNamed('operations', extra: selectedLoomsText());
-                // Operations sayfasından dönünce otomatik yenile
                 if (context.mounted) {
                   context.read<TezgahBloc>().add(TezgahFetched());
                 }
@@ -509,7 +522,13 @@ class _BottomActions extends StatelessWidget {
                   ),
                 );
 
-                if (confirmed != true) return;
+                if (confirmed != true) {
+                  // İptalle dönülse bile ana sayfayı yenile
+                  if (context.mounted) {
+                    context.read<TezgahBloc>().add(TezgahFetched());
+                  }
+                  return;
+                }
 
                 // Operasyon sonlandırma API çağrısı
                 await _handleEndOperation(context);
@@ -538,9 +557,12 @@ class _BottomActions extends StatelessWidget {
           ),
         ),
         onPressed: hasExactlyOneSelection
-            ? () {
+            ? () async {
                 final selected = selectedLoomsText();
-                showFabricDialog(context, initialLoomsText: selected);
+                await showFabricDialog(context, initialLoomsText: selected);
+                if (context.mounted) {
+                  context.read<TezgahBloc>().add(TezgahFetched());
+                }
               }
             : null,
         child: Container(
@@ -566,9 +588,12 @@ class _BottomActions extends StatelessWidget {
           ),
         ),
         onPressed: hasExactlyOneSelection
-            ? () {
+            ? () async {
                 final selected = selectedLoomsText();
-                showWarpDialog(context, initialLoomsText: selected);
+                await showWarpDialog(context, initialLoomsText: selected);
+                if (context.mounted) {
+                  context.read<TezgahBloc>().add(TezgahFetched());
+                }
               }
             : null,
         child: Container(
@@ -601,11 +626,14 @@ class _BottomActions extends StatelessWidget {
                 if (!hasWorkOrder) {
                   // Dialog göster
                   await _showNoWorkOrderDialog(context);
+                  // İptalle dönüşte de yenileyelim
+                  if (context.mounted) {
+                    context.read<TezgahBloc>().add(TezgahFetched());
+                  }
                   return;
                 }
-                final result = await context.pushNamed('piece-cut', extra: selectedLoom);
-                // Ana ekrana dönünce otomatik yenile
-                if (result == true && context.mounted) {
+                await context.pushNamed('piece-cut', extra: selectedLoom);
+                if (context.mounted) {
                   context.read<TezgahBloc>().add(TezgahFetched());
                 }
               }
@@ -624,86 +652,89 @@ class _BottomActions extends StatelessWidget {
       ),
     ];
 
-    // Responsive buton düzeni
-    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-    
-    if (isLandscape) {
-      // Landscape modda 2 satır (3+3)
-      return Column(
-        children: [
-          // İlk 3 buton
-          Row(
-            children: buttons
-                .take(3)
-                .map((b) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: SizedBox(height: 50, child: b),
-                      ),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 8),
-          // Son 3 buton
-          Row(
-            children: buttons
-                .skip(3)
-                .map((b) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: SizedBox(height: 50, child: b),
-                      ),
-                    ))
-                .toList(),
-          ),
-        ],
-      );
-    } else {
-      // Portrait modda 3 satır (2+2+2)
-      return Column(
-        children: [
-          // İlk 2 buton
-          Row(
-            children: buttons
-                .take(2)
-                .map((b) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: SizedBox(height: 60, child: b),
-                      ),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 12),
-          // İkinci 2 buton
-          Row(
-            children: buttons
-                .skip(2)
-                .take(2)
-                .map((b) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: SizedBox(height: 60, child: b),
-                      ),
-                    ))
-                .toList(),
-          ),
-          const SizedBox(height: 12),
-          // Son 2 buton
-          Row(
-            children: buttons
-                .skip(4)
-                .map((b) => Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: SizedBox(height: 60, child: b),
-                      ),
-                    ))
-                .toList(),
-          ),
-        ],
-      );
-    }
+    final bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final Widget content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+      child: isLandscape
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: buttons
+                      .take(3)
+                      .map((b) => Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: SizedBox(height: 50, child: b),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: buttons
+                      .skip(3)
+                      .map((b) => Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4),
+                              child: SizedBox(height: 50, child: b),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: buttons
+                      .take(2)
+                      .map((b) => Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: SizedBox(height: 60, child: b),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: buttons
+                      .skip(2)
+                      .take(2)
+                      .map((b) => Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: SizedBox(height: 60, child: b),
+                            ),
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: buttons
+                      .skip(4)
+                      .map((b) => Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 5),
+                              child: SizedBox(height: 60, child: b),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
+    );
+
+    // Grup arka planını kaldır: Butonları doğrudan göster
+    return content;
   }
 }
 
