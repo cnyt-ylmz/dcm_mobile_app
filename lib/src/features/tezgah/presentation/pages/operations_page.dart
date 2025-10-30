@@ -389,8 +389,32 @@ class _OperationStartFormState extends State<_OperationStartForm> {
     try {
       final apiClient = GetIt.I<ApiClient>();
 
-      // Her tezgah için ayrı istek at
-      for (final loomNo in tezgahIds) {
+      // İlk ilerleme dialogunu göster
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => _ProgressDialog(
+          totalLooms: tezgahIds.length,
+          currentLoom: 0,
+        ),
+      );
+
+      // Her tezgah için ayrı istek at ve ilerlemeyi güncelle
+      for (int i = 0; i < tezgahIds.length; i++) {
+        final loomNo = tezgahIds[i];
+
+        // İlerleme dialogunu güncelle
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => _ProgressDialog(
+            totalLooms: tezgahIds.length,
+            currentLoom: i + 1,
+            currentLoomNo: loomNo,
+          ),
+        );
+
         final requestData = {
           "loomNo": loomNo,
           "personnelID": personnelId,
@@ -409,9 +433,14 @@ class _OperationStartFormState extends State<_OperationStartForm> {
         );
 
         print("Response: ${response.data}");
+
+        // Kısa bir gecikme ekle (çok hızlı geçmesin)
+        await Future.delayed(const Duration(milliseconds: 300));
       }
 
       if (mounted) {
+        // İlerleme dialogunu kapat
+        Navigator.of(context).pop();
         // Ana ekrana dön
         Navigator.of(context).pop(true); // true = başarılı
 
@@ -428,6 +457,8 @@ class _OperationStartFormState extends State<_OperationStartForm> {
     } catch (e) {
       print("Hata: $e");
       if (mounted) {
+        // İlerleme dialogunu kapat (açıksa)
+        Navigator.of(context).pop();
         // Ana ekrana dön
         Navigator.of(context).pop(false); // false = başarısız
         
@@ -449,5 +480,59 @@ class _OperationStartFormState extends State<_OperationStartForm> {
     }
   }
 
+}
+
+class _ProgressDialog extends StatelessWidget {
+  final int totalLooms;
+  final int currentLoom;
+  final String? currentLoomNo;
+
+  const _ProgressDialog({
+    required this.totalLooms,
+    required this.currentLoom,
+    this.currentLoomNo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double progress = totalLooms == 0 ? 0 : currentLoom / totalLooms;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'progress_processing_title'.tr(),
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '$currentLoom / $totalLooms',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            if (currentLoomNo != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${'label_loom'.tr()}: $currentLoomNo',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
 }
 

@@ -33,6 +33,60 @@ class HomePage extends StatelessWidget {
   }
 }
 
+class _ProgressDialog extends StatelessWidget {
+  final int totalLooms;
+  final int currentLoom;
+  final String? currentLoomNo;
+
+  const _ProgressDialog({
+    required this.totalLooms,
+    required this.currentLoom,
+    this.currentLoomNo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double progress = totalLooms == 0 ? 0 : currentLoom / totalLooms;
+
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'progress_processing_title'.tr(),
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.grey[300],
+              valueColor: AlwaysStoppedAnimation<Color>(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              '$currentLoom / $totalLooms',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            if (currentLoomNo != null) ...[
+              const SizedBox(height: 8),
+              Text(
+                '${'label_loom'.tr()}: $currentLoomNo',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _HomeView extends StatelessWidget {
   const _HomeView();
 
@@ -66,7 +120,7 @@ class _HomeView extends StatelessWidget {
         padding: EdgeInsets.all(
             MediaQuery.of(context).orientation == Orientation.landscape
                 ? 8.0
-                : 16.0),
+                : 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,19 +129,19 @@ class _HomeView extends StatelessWidget {
                 height: MediaQuery.of(context).orientation ==
                         Orientation.landscape
                     ? 8
-                    : 12),
+                    : 8),
             _SelectAllRow(),
             SizedBox(
                 height: MediaQuery.of(context).orientation ==
                         Orientation.landscape
                     ? 8
-                    : 12),
+                    : 8),
             const Expanded(child: _TezgahGrid()),
             SizedBox(
                 height: MediaQuery.of(context).orientation ==
                         Orientation.landscape
                     ? 8
-                    : 12),
+                    : 8),
             const _BottomActions(),
           ],
         ),
@@ -137,17 +191,17 @@ class _SelectAllRow extends StatelessWidget {
                 context.read<TezgahBloc>().add(TezgahSelectAll(v ?? false)),
           ),
           Text('select_all'.tr(),
-              style: Theme.of(context).textTheme.bodySmall!),
+              style: Theme.of(context).textTheme.bodyMedium!),
         ]),
         Row(children: [
+          Text('btn_refresh'.tr(),
+              style: Theme.of(context).textTheme.bodyMedium!),
           IconButton(
             onPressed: () {
               context.read<TezgahBloc>().add(TezgahFetched());
             },
             icon: const Icon(Icons.refresh),
           ),
-          Text('btn_refresh'.tr(),
-              style: Theme.of(context).textTheme.bodySmall!),
         ]),
       ],
     );
@@ -186,8 +240,7 @@ class _TezgahGrid extends StatelessWidget {
             // Hesaplanan hücre genişliğine göre aspect ratio
             final double totalSpacing = spacing * (crossAxisCount - 1);
             final double tileWidth = (maxWidth - totalSpacing) / crossAxisCount;
-            final double tileHeight =
-                isLandscape ? 80 : 120; // başlık + 2 satır (daha kompakt)
+            final double tileHeight = 100; // Portre ve yatay için 100px
             final double childAspectRatio = tileWidth / tileHeight;
 
             return GridView.builder(
@@ -225,7 +278,7 @@ class _TezgahGrid extends StatelessWidget {
                           child: Text(
                             item.loomNo,
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                               color: const Color(0xFF1565C0),
                             ),
@@ -233,7 +286,7 @@ class _TezgahGrid extends StatelessWidget {
                         ),
                         // Dokumacı Adı - Loom No'nun altında ve sola dayalı
                         Positioned(
-                          top: 25,
+                          top: 20,
                           left: 0,
                           child: Text(
                             item.weaverName,
@@ -245,7 +298,7 @@ class _TezgahGrid extends StatelessWidget {
                         ),
                         // Stil Adı - Dokumacı Adı'nın altında ve sola dayalı
                         Positioned(
-                          top: 50,
+                          top: 40,
                           left: 0,
                           child: Text(
                             item.styleName,
@@ -258,7 +311,7 @@ class _TezgahGrid extends StatelessWidget {
                         // Operasyon adı - Kendi satırında, sola dayalı (varsa)
                         if (item.operationName.isNotEmpty)
                           Positioned(
-                            top: 80, // Stil Adı'nın altında (10px boşluk)
+                            top: 60, // Stil Adı'nın altında (15px boşluk)
                             left: 0, // Sola dayalı
                             child: Text(
                               item.operationName,
@@ -655,7 +708,7 @@ class _BottomActions extends StatelessWidget {
     final bool isLandscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final Widget content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
       child: isLandscape
           ? Column(
               mainAxisSize: MainAxisSize.min,
@@ -667,7 +720,7 @@ class _BottomActions extends StatelessWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4),
-                              child: SizedBox(height: 50, child: b),
+                              child: SizedBox(height: 55, child: b),
                             ),
                           ))
                       .toList(),
@@ -680,7 +733,7 @@ class _BottomActions extends StatelessWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4),
-                              child: SizedBox(height: 50, child: b),
+                              child: SizedBox(height: 55, child: b),
                             ),
                           ))
                       .toList(),
@@ -697,7 +750,7 @@ class _BottomActions extends StatelessWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
-                              child: SizedBox(height: 60, child: b),
+                              child: SizedBox(height: 55, child: b),
                             ),
                           ))
                       .toList(),
@@ -711,7 +764,7 @@ class _BottomActions extends StatelessWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
-                              child: SizedBox(height: 60, child: b),
+                              child: SizedBox(height: 55, child: b),
                             ),
                           ))
                       .toList(),
@@ -724,7 +777,7 @@ class _BottomActions extends StatelessWidget {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
-                              child: SizedBox(height: 60, child: b),
+                              child: SizedBox(height: 55, child: b),
                             ),
                           ))
                       .toList(),
@@ -755,21 +808,37 @@ Future<void> _handleEndOperation(BuildContext context) async {
     return;
   }
 
-  // Loading göster
+  // İlerleme dialogunu başlat
   if (!context.mounted) return;
   showDialog(
     context: context,
     barrierDismissible: false,
-    builder: (context) => const Center(
-      child: CircularProgressIndicator(),
+    builder: (context) => _ProgressDialog(
+      totalLooms: selectedItems.length,
+      currentLoom: 0,
     ),
   );
 
   try {
     final apiClient = GetIt.I<ApiClient>();
 
-    // Her tezgah için ayrı istek at
-    for (final item in selectedItems) {
+    // Her tezgah için ayrı istek at ve ilerlemeyi güncelle
+    for (int i = 0; i < selectedItems.length; i++) {
+      final item = selectedItems[i];
+
+      // İlerleme dialogunu güncelle
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => _ProgressDialog(
+            totalLooms: selectedItems.length,
+            currentLoom: i + 1,
+            currentLoomNo: item.id,
+          ),
+        );
+      }
       final requestData = {
         "loomNo": item.id,
         "personnelID": 1, // Backend 0 kabul etmiyor, varsayılan 1 kullan
@@ -788,9 +857,12 @@ Future<void> _handleEndOperation(BuildContext context) async {
       );
 
       print("Response: ${response.data}");
+
+      // Kısa bir gecikme ekle (çok hızlı geçmesin)
+      await Future.delayed(const Duration(milliseconds: 300));
     }
 
-    // Loading'i kapat
+    // İlerleme dialogunu kapat
     if (!context.mounted) return;
     Navigator.of(context).pop();
 
@@ -811,7 +883,7 @@ Future<void> _handleEndOperation(BuildContext context) async {
   } catch (e) {
     print("Hata: $e");
 
-    // Loading'i kapat
+    // İlerleme dialogunu kapat (açıksa)
     if (!context.mounted) return;
     Navigator.of(context).pop();
 
