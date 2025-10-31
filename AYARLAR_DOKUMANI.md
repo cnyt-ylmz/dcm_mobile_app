@@ -1,4 +1,4 @@
-# 🔧 Ayarlar Sistemi - FAZ-2 Tezgah Kontrol Uygulaması
+# 🔧 Ayarlar Sistemi - DCM Mobile Tezgah Kontrol Uygulaması
 
 ## 🎯 **Özellikler**
 

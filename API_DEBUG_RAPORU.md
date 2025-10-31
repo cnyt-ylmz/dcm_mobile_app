@@ -1,4 +1,4 @@
-# 🔍 API Debug Raporu - FAZ-2 Tezgah Kontrol Uygulaması
+# 🔍 API Debug Raporu - DCM Mobile Tezgah Kontrol Uygulaması
 
 ## ✅ **Problem Çözüldü!**
 
