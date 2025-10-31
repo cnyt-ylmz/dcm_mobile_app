@@ -1,3 +1,60 @@
+# Flutter & Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+**/.generated/
+
+# Build outputs
+build/
+android/.gradle/
+android/build/
+ios/build/
+linux/build/
+macos/build/
+windows/build/
+web/.dart_tool/
+
+# iOS / Xcode
+ios/Flutter/ephemeral/
+ios/Pods/
+ios/Runner.xcworkspace/xcuserdata/
+ios/Runner.xcodeproj/xcuserdata/
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+**/*.xcuserstate
+**/*.xcscmblueprint
+DerivedData/
+
+# CocoaPods (lock dosyası takipte kalsın)
+!ios/Podfile
+!ios/Podfile.lock
+
+# Android / Gradle
+**/local.properties
+**/.cxx/
+**/.idea/
+**/.gradle/
+**/captures/
+
+# IntelliJ / VSCode
+.idea/
+.vscode/
+*.iml
+
+# Logs & temp
+*.log
+*.tmp
+*.temp
+
+# System files
+.DS_Store
+Thumbs.db
+
+# App artifacts accidentally committed before
+android/app/build/outputs/
+ios/build/
+ios/Runner/Assets.xcassets/LaunchImage.imageset/dcm
+
 # Miscellaneous
 *.class
 *.log
