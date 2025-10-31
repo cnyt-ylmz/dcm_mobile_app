@@ -81,24 +81,24 @@ class _FabricDialogState extends State<_FabricDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-        decoration: BoxDecoration(
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+          decoration: BoxDecoration(
           color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'fabric_ops_title'.tr(),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'fabric_ops_title'.tr(),
               style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
             if (_isLoading)
               const Center(
                 child: Padding(
@@ -184,7 +184,7 @@ class _FabricDialogState extends State<_FabricDialog> {
           ],
         ),
       ),
-    );
+  );
   }
 }
 

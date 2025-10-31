@@ -84,24 +84,24 @@ class _WarpDialogState extends State<_WarpDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).dialogBackgroundColor,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'warp_ops_title'.tr(),
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).dialogBackgroundColor,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'warp_ops_title'.tr(),
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
             if (_isLoading)
               const Center(
                 child: Padding(
@@ -184,10 +184,10 @@ class _WarpDialogState extends State<_WarpDialog> {
                 isEnabled: _workOrderNo != null,
               ),
             ],
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
   }
 }
 

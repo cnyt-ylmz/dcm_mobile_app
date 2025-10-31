@@ -712,79 +712,79 @@ class _BottomActions extends StatelessWidget {
       child: isLandscape
           ? Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: buttons
-                      .take(3)
-                      .map((b) => Expanded(
-                            child: Padding(
+        children: [
+          Row(
+            children: buttons
+                .take(3)
+                .map((b) => Expanded(
+                      child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4),
                               child: SizedBox(height: 55, child: b),
-                            ),
-                          ))
-                      .toList(),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: buttons
-                      .skip(3)
-                      .map((b) => Expanded(
-                            child: Padding(
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: buttons
+                .skip(3)
+                .map((b) => Expanded(
+                      child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4),
                               child: SizedBox(height: 55, child: b),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
             )
           : Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Row(
-                  children: buttons
-                      .take(2)
-                      .map((b) => Expanded(
-                            child: Padding(
+        children: [
+          Row(
+            children: buttons
+                .take(2)
+                .map((b) => Expanded(
+                      child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: SizedBox(height: 55, child: b),
-                            ),
-                          ))
-                      .toList(),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: buttons
-                      .skip(2)
-                      .take(2)
-                      .map((b) => Expanded(
-                            child: Padding(
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: buttons
+                .skip(2)
+                .take(2)
+                .map((b) => Expanded(
+                      child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: SizedBox(height: 55, child: b),
-                            ),
-                          ))
-                      .toList(),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: buttons
-                      .skip(4)
-                      .map((b) => Expanded(
-                            child: Padding(
+                      ),
+                    ))
+                .toList(),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: buttons
+                .skip(4)
+                .map((b) => Expanded(
+                      child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: SizedBox(height: 55, child: b),
-                            ),
-                          ))
-                      .toList(),
-                ),
-              ],
+                      ),
+                    ))
+                .toList(),
+          ),
+        ],
             ),
-    );
+      );
 
     // Grup arka planını kaldır: Butonları doğrudan göster
     return content;

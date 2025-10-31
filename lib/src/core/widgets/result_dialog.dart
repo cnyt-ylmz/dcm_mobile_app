@@ -139,14 +139,14 @@ class _ResultDialogState extends State<ResultDialog> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
+        ElevatedButton(
+          onPressed: () => Navigator.of(context).pop(),
+          style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1565C0),
                 foregroundColor: Colors.white,
                 minimumSize: const Size(100, 40),
-              ),
-              child: Text('action_ok'.tr()),
+          ),
+          child: Text('action_ok'.tr()),
             ),
           ],
         ),

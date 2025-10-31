@@ -1,13 +1,13 @@
 {
   "images" : [
     {
-      "filename" : "DCM_Mobile Icon (40 x 40 piksel).png",
+      "filename" : "40 2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
-      "filename" : "DCM_Mobile Icon (60 x 60 piksel).png",
+      "filename" : "60.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
@@ -19,37 +19,37 @@
       "size" : "29x29"
     },
     {
-      "filename" : "DCM_Mobile Icon (58 x 58 piksel).png",
+      "filename" : "58 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "DCM_Mobile Icon (87 x 87 piksel).png",
+      "filename" : "87.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
     },
     {
-      "filename" : "DCM_Mobile Icon (80 x 80 piksel).png",
+      "filename" : "80 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "DCM_Mobile Icon (120 x 120 piksel) 1.png",
+      "filename" : "120.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "40x40"
     },
     {
-      "filename" : "DCM_Mobile Icon (120 x 120 piksel).png",
+      "filename" : "120 1.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
-      "filename" : "DCM_Mobile Icon (180 x 180 piksel).png",
+      "filename" : "180.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
@@ -61,7 +61,7 @@
       "size" : "20x20"
     },
     {
-      "filename" : "DCM_Mobile Icon (40 x 40 piksel) 2.png",
+      "filename" : "40 1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -73,37 +73,37 @@
       "size" : "29x29"
     },
     {
-      "filename" : "DCM_Mobile Icon (58 x 58 piksel) 1.png",
+      "filename" : "58.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
-      "filename" : "DCM_Mobile Icon (40 x 40 piksel) 1.png",
+      "filename" : "40.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "40x40"
     },
     {
-      "filename" : "DCM_Mobile Icon (80 x 80 piksel) 1.png",
+      "filename" : "80.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "40x40"
     },
     {
-      "filename" : "DCM_Mobile Icon (76 x 76 piksel).png",
+      "filename" : "76.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
-      "filename" : "DCM_Mobile Icon (152 x 152 piksel).png",
+      "filename" : "152.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "76x76"
     },
     {
-      "filename" : "DCM_Mobile Icon (167 x 167 piksel).png",
+      "filename" : "167.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
