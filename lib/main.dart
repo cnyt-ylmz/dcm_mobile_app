@@ -11,15 +11,17 @@ import 'src/core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Preserve splash screen
-  FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
-  
+  FlutterNativeSplash.preserve(
+      widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
+
   await EasyLocalization.ensureInitialized();
   await configureDependencies(GetIt.I);
 
   // 🚀 Uygulama başlatılıyor...
-  print('🚀 DCM Mobile Tezgah Kontrol Uygulaması başlatılıyor (Auth disabled)...');
+  print(
+      '🚀 DCM Mobile Tezgah Kontrol Uygulaması başlatılıyor (Auth disabled)...');
 
   // Persisted locale from Hive
   final Box<dynamic> settings = GetIt.I<Box<dynamic>>();
@@ -52,11 +54,11 @@ class FazApp extends StatelessWidget {
       SystemUiOverlay.top, // Status bar (saat) görünür
       SystemUiOverlay.bottom, // Navigation bar görünür
     ]);
-    
+
     final GoRouter router = buildRouter();
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'TEZGAHLAR',
+      title: 'DCM Mobile',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1565C0)),
         useMaterial3: true,
@@ -78,8 +80,10 @@ class FazApp extends StatelessWidget {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFF1E1E1E), // Cursor dark background
-        dialogBackgroundColor: const Color(0xFF252526), // Cursor dialog background
+        scaffoldBackgroundColor:
+            const Color(0xFF1E1E1E), // Cursor dark background
+        dialogBackgroundColor:
+            const Color(0xFF252526), // Cursor dialog background
         cardColor: const Color(0xFF2D2D30), // Cursor card background
         dividerColor: const Color(0xFF3E3E42), // Cursor divider
         inputDecorationTheme: InputDecorationTheme(

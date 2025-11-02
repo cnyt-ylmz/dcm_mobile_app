@@ -21,6 +21,7 @@ dependencies:
   hive_flutter: ^1.1.0
   google_fonts: ^6.1.0
   mobile_scanner: ^5.2.3
+  flutter_native_splash: ^2.4.7
 
 dev_dependencies:
   flutter_test:
@@ -28,7 +29,6 @@ dev_dependencies:
   flutter_lints: ^4.0.0
   build_runner: ^2.4.11
   json_serializable: ^6.8.0
-  flutter_native_splash: ^2.3.10
   flutter_launcher_icons: ^0.14.4
 
 flutter:
@@ -39,19 +39,19 @@ flutter:
 flutter_native_splash:
   color: "#ffffff"
   color_dark: "#1E1E1E"
-  image: assets/logo.png
-  image_dark: assets/logo.png
-  fullscreen: false
+  image: assets/splashscreen.png
+  image_dark: assets/splashscreen.png
+
   android_12:
     color: "#ffffff"
     color_dark: "#1E1E1E"
-    image: assets/logo.png
-    image_dark: assets/logo.png
-  web: false
+    image: assets/android12splash.png
+    image_dark: assets/android12splash.png
+    branding: assets/brandimage.png
 
 flutter_launcher_icons:
   android: true
-  image_path: "assets/logo.png"
+  image_path: "assets/splashscreen.png"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/logo.png"
+  adaptive_icon_foreground: "assets/splashscreen.png"
   min_sdk_android: 21
